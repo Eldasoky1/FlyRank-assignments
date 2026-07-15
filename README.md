@@ -24,6 +24,7 @@ Open **http://localhost:8000/docs** for interactive Swagger UI.
 | POST | `/tasks` | Create a task (body: `{"title": "..."}`) | 201, 400 |
 | PUT | `/tasks/{task_id}` | Update a task (body: `{"title": "...", "done": true}`) | 200, 400, 404 |
 | DELETE | `/tasks/{task_id}` | Delete a task | 204, 404 |
+| GET | `/stats` | Task statistics (total/done/open) | 200 |
 
 ## Example: curl -i
 
