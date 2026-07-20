@@ -2,10 +2,11 @@ from fastapi import FastAPI, HTTPException, Query
 from pydantic import BaseModel
 from typing import Optional
 import sqlite3
+from datetime import datetime
 
 app = FastAPI(
     title="Task API",
-    description="A simple CRUD API for managing to-do tasks.",
+    description="A simple CRUD API for managing to-do tasks with SQLite.",
     version="2.0",
 )
 
@@ -13,32 +14,33 @@ DB_PATH = "tasks.db"
 
 
 def get_db():
-    """Get a database connection."""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
 
 def init_db():
-    """Create table and seed data if needed."""
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             title TEXT NOT NULL,
-            done BOOLEAN NOT NULL DEFAULT 0
+            done BOOLEAN NOT NULL DEFAULT 0,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
         )
     """)
     cursor.execute("SELECT COUNT(*) FROM tasks")
     count = cursor.fetchone()[0]
     if count == 0:
+        now = datetime.now().isoformat()
         cursor.executemany(
-            "INSERT INTO tasks (title, done) VALUES (?, ?)",
+            "INSERT INTO tasks (title, done, created_at, updated_at) VALUES (?, ?, ?, ?)",
             [
-                ("Buy groceries", False),
-                ("Read a book", True),
-                ("Clean the house", False),
+                ("Buy groceries", False, now, now),
+                ("Read a book", True, now, now),
+                ("Clean the house", False, now, now),
             ],
         )
     conn.commit()
@@ -59,7 +61,7 @@ class TaskUpdate(BaseModel):
 
 @app.get("/")
 def root():
-    return {"name": "Task API", "version": "2.0", "endpoints": ["/tasks"]}
+    return {"name": "Task API", "version": "2.0", "endpoints": ["/tasks", "/stats"]}
 
 
 @app.get("/health")
@@ -74,7 +76,7 @@ def list_tasks(
 ):
     conn = get_db()
     cursor = conn.cursor()
-    query = "SELECT id, title, done FROM tasks"
+    query = "SELECT id, title, done, created_at, updated_at FROM tasks"
     conditions = []
     params = []
     if done is not None:
@@ -85,21 +87,40 @@ def list_tasks(
         params.append(f"%{search}%")
     if conditions:
         query += " WHERE " + " AND ".join(conditions)
+    query += " ORDER BY title"
     cursor.execute(query, params)
     rows = cursor.fetchall()
     conn.close()
-    return [{"id": r["id"], "title": r["title"], "done": bool(r["done"])} for r in rows]
+    return [
+        {
+            "id": r["id"],
+            "title": r["title"],
+            "done": bool(r["done"]),
+            "created_at": r["created_at"],
+            "updated_at": r["updated_at"],
+        }
+        for r in rows
+    ]
 
 
 @app.get("/tasks/{task_id}")
 def get_task(task_id: int):
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("SELECT id, title, done FROM tasks WHERE id = ?", (task_id,))
+    cursor.execute(
+        "SELECT id, title, done, created_at, updated_at FROM tasks WHERE id = ?",
+        (task_id,),
+    )
     row = cursor.fetchone()
     conn.close()
     if row:
-        return {"id": row["id"], "title": row["title"], "done": bool(row["done"])}
+        return {
+            "id": row["id"],
+            "title": row["title"],
+            "done": bool(row["done"]),
+            "created_at": row["created_at"],
+            "updated_at": row["updated_at"],
+        }
     raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
 
 
@@ -107,13 +128,28 @@ def get_task(task_id: int):
 def create_task(payload: TaskCreate):
     if not payload.title or not payload.title.strip():
         raise HTTPException(status_code=400, detail="Title is required")
+    now = datetime.now().isoformat()
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO tasks (title, done) VALUES (?, ?)", (payload.title.strip(), 0))
+    cursor.execute(
+        "INSERT INTO tasks (title, done, created_at, updated_at) VALUES (?, ?, ?, ?)",
+        (payload.title.strip(), 0, now, now),
+    )
     new_id = cursor.lastrowid
     conn.commit()
+    cursor.execute(
+        "SELECT id, title, done, created_at, updated_at FROM tasks WHERE id = ?",
+        (new_id,),
+    )
+    row = cursor.fetchone()
     conn.close()
-    return {"id": new_id, "title": payload.title.strip(), "done": False}
+    return {
+        "id": row["id"],
+        "title": row["title"],
+        "done": bool(row["done"]),
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
 
 
 @app.put("/tasks/{task_id}")
@@ -132,14 +168,29 @@ def update_task(task_id: int, payload: TaskUpdate):
         if not payload.title.strip():
             conn.close()
             raise HTTPException(status_code=400, detail="Title cannot be empty")
-        cursor.execute("UPDATE tasks SET title = ? WHERE id = ?", (payload.title.strip(), task_id))
+        cursor.execute(
+            "UPDATE tasks SET title = ?, updated_at = ? WHERE id = ?",
+            (payload.title.strip(), datetime.now().isoformat(), task_id),
+        )
     if payload.done is not None:
-        cursor.execute("UPDATE tasks SET done = ? WHERE id = ?", (int(payload.done), task_id))
+        cursor.execute(
+            "UPDATE tasks SET done = ?, updated_at = ? WHERE id = ?",
+            (int(payload.done), datetime.now().isoformat(), task_id),
+        )
     conn.commit()
-    cursor.execute("SELECT id, title, done FROM tasks WHERE id = ?", (task_id,))
+    cursor.execute(
+        "SELECT id, title, done, created_at, updated_at FROM tasks WHERE id = ?",
+        (task_id,),
+    )
     row = cursor.fetchone()
     conn.close()
-    return {"id": row["id"], "title": row["title"], "done": bool(row["done"])}
+    return {
+        "id": row["id"],
+        "title": row["title"],
+        "done": bool(row["done"]),
+        "created_at": row["created_at"],
+        "updated_at": row["updated_at"],
+    }
 
 
 @app.delete("/tasks/{task_id}", status_code=204)
