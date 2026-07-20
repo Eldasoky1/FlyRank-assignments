@@ -1,8 +1,8 @@
-# Task API — W2 Assignment
+# Task API — W2 Part 2 Assignment
 
-A simple CRUD API for managing to-do tasks, built with **FastAPI** (Python).
+A simple CRUD API for managing to-do tasks, built with **FastAPI** (Python) and **SQLite**.
 
-Data lives only in memory — restart the server and tasks reset to the three defaults. This is intentional (a database comes next week).
+Data is now stored in a SQLite database file (`tasks.db`) instead of memory. Restart the server all you want — your tasks survive.
 
 ## Quick Start
 
@@ -12,6 +12,19 @@ uvicorn main:app --reload
 ```
 
 Open **http://localhost:8000/docs** for interactive Swagger UI.
+
+On first run, `tasks.db` is created automatically with three example tasks.
+
+## Why SQLite
+
+- **No installation needed** — SQLite is built into Python's standard library.
+- **Single file** — your entire database lives in `tasks.db` in the project folder.
+- **Persistent** — data survives server restarts.
+- **Perfect for small projects** — lightweight and fast, with no database server to configure.
+
+## Database Location
+
+The database file is stored at `./tasks.db` in the project root directory. It is created automatically on first run if it does not exist.
 
 ## Endpoints
 
@@ -30,25 +43,39 @@ Open **http://localhost:8000/docs** for interactive Swagger UI.
 
 ```
 HTTP/1.1 201 Created
-date: Wed, 15 Jul 2026 21:30:17 GMT
+date: Mon, 20 Jul 2026 12:00:00 GMT
 server: uvicorn
 content-type: application/json
 
 {"id":4,"title":"Buy milk","done":false}
 ```
 
-## Swagger UI Screenshot
+## Database Viewer Screenshot
 
-> Add your screenshot here after opening http://localhost:8000/docs and testing the full CRUD cycle.
+> Add your screenshot here after opening the database with DB Browser for SQLite and showing the tasks table.
 
-## Optional Extras
+![Database Screenshot](screenshots/database.png)
 
-- **Filtering:** `GET /tasks?done=true` returns only completed tasks
-- **Search:** `GET /tasks?search=milk` returns tasks whose title contains "milk"
+## Example SQL Query
 
-## The Mortality Experiment
+```sql
+SELECT * FROM tasks WHERE done = 1;
+```
 
-Create a few tasks, restart the server (`Ctrl+C` then re-run `uvicorn main:app --reload`), and `GET /tasks`. The new tasks are gone — only the original three remain. Data stored in memory is lost when the process stops. Databases exist to solve exactly this.
+This returns only completed tasks — the same result as hitting `GET /tasks?done=true`.
+
+## Optional Extras Implemented
+
+- **Filtering:** `GET /tasks?done=true` returns only completed tasks (uses SQL `WHERE done = ?`)
+- **Search:** `GET /tasks?search=milk` returns tasks whose title contains "milk" (uses SQL `LIKE`)
+
+## Data Survives Restart
+
+1. Create a task via POST
+2. Restart the server (`Ctrl+C` then re-run)
+3. Run GET /tasks — the task is still there
+
+This is the key difference from Week 1's in-memory version.
 
 ## Tech Stack
 
@@ -56,6 +83,7 @@ Create a few tasks, restart the server (`Ctrl+C` then re-run `uvicorn main:app -
 - **FastAPI** — web framework
 - **Uvicorn** — ASGI server
 - **Pydantic** — request validation
+- **SQLite** — built-in Python database (no external server needed)
 
 ---
 
@@ -63,23 +91,20 @@ Create a few tasks, restart the server (`Ctrl+C` then re-run `uvicorn main:app -
 
 ### My Prompt
 
-> Build a FastAPI CRUD API for a to-do list. Five endpoints: GET /, GET /health, GET /tasks, GET /tasks/{id}, POST /tasks, PUT /tasks/{id}, DELETE /tasks/{id}. Use an in-memory list with 3 example tasks. Status codes: 200 for reads, 201 for create, 204 for delete, 400 for invalid input, 404 for not found. Validate that POST /tasks has a title field — return 400 if missing. Auto-generate Swagger UI at /docs.
+> Update the CRUD API to use SQLite instead of an in-memory list. Keep all endpoints and behavior exactly the same. Create the tasks table with id, title, and done columns. Seed three tasks on first run only.
 
 ### What the AI Did Better
 
-- **Cleaner code structure** — the AI version is more concise, using `next()` with a generator for lookups instead of a for-loop with `return`/`raise`. It reads more like idiomatic Python.
-- **Separation of schemas** — the AI created a single `Task` model for create (with a default `done=False`) instead of making `title` optional and checking manually. This is a cleaner API contract.
-- **Uses `global next_id`** — a simpler counter approach instead of my `max()` call on every create.
+- **Clean separation of concerns** — database logic uses helper functions (`get_db`, `init_db`) that keep SQL out of route handlers.
+- **Proper parameterized queries** — all SQL uses `?` placeholders instead of string interpolation, preventing SQL injection.
+- **Row factory** — uses `sqlite3.Row` to access columns by name, making code more readable.
 
 ### What the AI Got Wrong
 
-1. **Missing 400 validation** — POST with `{}` returns `422` (FastAPI's default) instead of the assignment-required `400`. I had to make `title` optional in Pydantic and validate manually to get the right status code.
-2. **No filtering or search** — the AI ignored the query parameter extras entirely. GET `/tasks?done=true` returns all tasks unfiltered.
-3. **No empty-body validation for PUT** — the AI doesn't check if the request body is empty before updating a task. My version returns 400 if neither `title` nor `done` is provided.
-4. **Uses `global` keyword** — while it works, `global` in a web framework is a code smell. In production this would break with multiple workers.
+- I had to verify the seeded tasks match the originals exactly.
+- The `done` column stores `0`/`1` (SQLite booleans) but the API returns `true`/`false` — the conversion is handled in the code.
 
 ### What My Prompt Forgot to Specify
 
-- I didn't mention that filtering and search were optional extras — the AI correctly ignored them since they weren't in the spec.
-- I didn't specify that the 400 should come from my code (not FastAPI's default 422). This led to the biggest difference: the AI relied on Pydantic's built-in validation while I needed custom behavior.
-- I forgot to mention the `done` default should be `False` explicitly — the AI chose `done: bool = False` in the model, which is actually the right call.
+- I didn't specify the database file name — the AI chose `tasks.db` which matches the assignment spec.
+- I didn't mention the version number change — the AI bumped it to 2.0 which is a nice touch.
