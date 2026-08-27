@@ -1,0 +1,28 @@
+name: flyrank-capstone-imagerelevance
+title: AI Image Understanding & Content Matching Engine
+run: python -m uvicorn main:app --reload --port 8002
+seed: python -c "from corpus_data import dump_corpus; print('images:', dump_corpus())"
+test: python -m pytest -q
+base_url: http://127.0.0.1:8002
+endpoints:
+  - path: /health
+    method: GET
+    description: Liveness + provider + corpus size
+  - path: /images
+    method: GET
+    description: List corpus
+  - path: /jobs
+    method: POST
+    description: Submit batch vision+match job (background)
+  - path: /jobs/{job_id}
+    method: GET
+    description: Poll progress + per-call cost
+  - path: /eval
+    method: POST
+    description: Run labeled eval set -> top-1 precision
+  - path: /review/{image_id}
+    method: GET
+    description: Inspect why (vision + match + guard)
+  - path: /review/{image_id}/decision
+    method: POST
+    description: Approve / reject a match
