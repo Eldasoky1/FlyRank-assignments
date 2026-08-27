@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+venv/
+.env
+tasks.db
+variants_out/
+.social_media_db

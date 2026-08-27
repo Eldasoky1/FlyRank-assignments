@@ -1,0 +1,24 @@
+name: flyrank-capstone-socialstudio
+title: Social Media Studio
+run: python -m uvicorn main:app --reload --port 8003
+test: python -m pytest -q
+base_url: http://127.0.0.1:8003
+endpoints:
+  - path: /health
+    method: GET
+    description: Liveness + publishers
+  - path: /posts
+    method: POST
+    description: Compose caption + schedule durable publish
+  - path: /posts/{job_id}
+    method: GET
+    description: Job + status
+  - path: /publish
+    method: POST
+    description: Run durable scheduler (publish due jobs)
+  - path: /variants/specs
+    method: GET
+    description: Platform image variant specs
+  - path: /webhooks/{platform}
+    method: POST
+    description: Signature-verified status callbacks
