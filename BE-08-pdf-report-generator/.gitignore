@@ -1,0 +1,12 @@
+# Environment / secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.pytest_cache/
+
+# Ignore ad-hoc generated PDFs, but keep the one committed sample artifact.
+*.pdf
+!output/books-report.pdf
