@@ -1,0 +1,28 @@
+{
+  "name": "be-09-ai-decision-flow-reactflow-inngest",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AI decision flow: React Flow visualizer + Inngest step orchestration",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "inngest:dev": "inngest-cli dev"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.4.4",
+    "inngest": "^3.27.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.8"
+  }
+}
