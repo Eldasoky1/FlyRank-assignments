@@ -1,0 +1,18 @@
+name: flyrank-capstone-10xsolution
+title: CampaignBooster - AI Campaign Plan Accelerator (10x Solution)
+run: python -m uvicorn main:app --reload --port 8004
+test: python -m pytest -q
+base_url: http://127.0.0.1:8004
+endpoints:
+  - path: /campaigns
+    method: POST
+    description: Submit goal -> run full pipeline (background)
+  - path: /campaigns/{id}
+    method: GET
+    description: Poll stage progress + cost
+  - path: /campaigns/{id}/report
+    method: GET
+    description: Get markdown/HTML deliverable
+  - path: /health
+    method: GET
+    description: Liveness
