@@ -1,0 +1,8 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.pytest_cache/
+
+# Scraper output (the final artifact is committed; local reruns can be ignored)
+tmp/
