@@ -1,8 +1,9 @@
-"""Auth API — Stage 3: profile route token verification.
+"""Auth API — Stage 4: auth middleware and logout endpoint.
 
-`/protected/profile` now actually verifies the bearer token by calling
-`supabase.auth.get_user(token)`. Missing/invalid/expired/tampered tokens
-return 401; a valid token returns 200 with the user's data.
+- Token verification is extracted into a reusable dependency
+  (`get_current_user`) and applied to `/protected/profile` AND a new
+  `/protected/dashboard`.
+- `POST /auth/logout` is protected: it calls `signOut` and returns 204.
 """
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -14,7 +15,7 @@ from supabase_client import SupabaseError, create_auth_backend
 app = FastAPI(
     title="Auth API",
     description="Sign up, log in, log out and protected routes backed by Supabase Auth.",
-    version="1.3.0",
+    version="1.4.0",
 )
 
 AUTH = create_auth_backend()
@@ -69,13 +70,9 @@ def get_bearer_token(
     return credentials.credentials
 
 
-@app.get("/public/info")
-def public_info():
-    return {"message": "Welcome stranger! This info is public."}
-
-
-@app.get("/protected/profile")
-def protected_profile(token: str = Depends(get_bearer_token)):
+def get_current_user(token: str = Depends(get_bearer_token)):
+    """Reusable auth dependency. Verifies the bearer token via Supabase and
+    returns the authenticated user, or raises 401 on invalid/expired/tampered."""
     user = AUTH.get_user(token)
     if user is None:
         raise HTTPException(
@@ -83,7 +80,36 @@ def protected_profile(token: str = Depends(get_bearer_token)):
             detail="Invalid, expired or tampered token",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    return user
+
+
+@app.get("/public/info")
+def public_info():
+    return {"message": "Welcome stranger! This info is public."}
+
+
+@app.get("/protected/profile")
+def protected_profile(user=Depends(get_current_user)):
+    # The dependency already verified the token. Return the user's data.
     return {"user": user.to_dict()}
+
+
+@app.get("/protected/dashboard")
+def protected_dashboard(user=Depends(get_current_user)):
+    # Same reusable auth dependency guards this route too.
+    return {
+        "user": user.to_dict(),
+        "dashboard": {
+            "greeting": f"Welcome back, {user.email}",
+            "widgets": ["activity", "billing", "api-usage"],
+        },
+    }
+
+
+@app.post("/auth/logout", status_code=204)
+def logout(user=Depends(get_current_user), token: str = Depends(get_bearer_token)):
+    AUTH.logout(token)
+    return None
 
 
 
