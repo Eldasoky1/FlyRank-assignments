@@ -1,0 +1,28 @@
+name: flyrank-capstone-widgetplatform
+title: Embeddable Widget & Lead-Capture Platform
+run: python -m uvicorn main:app --reload --port 8001
+seed: python -c "import main; t=main.store.create_tenant('Demo'); w=main.store.create_widget(t['id'],'Newsletter'); print('tenant',t['id'],'widget',w['id'])"
+test: python -m pytest -q
+base_url: http://127.0.0.1:8001
+endpoints:
+  - path: /admin/tenants
+    method: POST
+    description: Create tenant (X-Api-Key)
+  - path: /admin/tenants/{tenant_id}/widgets
+    method: POST
+    description: Create widget for a tenant
+  - path: /admin/tenants/{tenant_id}/widgets
+    method: GET
+    description: List widgets (tenant isolated)
+  - path: /admin/widgets/{widget_id}
+    method: PATCH
+    description: Update widget (bumps version)
+  - path: /admin/tenants/{tenant_id}/stats
+    method: GET
+    description: Owner dashboard stats
+  - path: /w/{widget_id}.js
+    method: GET
+    description: Cached versioned embed bundle
+  - path: /lead
+    method: POST
+    description: Public lead submission (validation + abuse protection)
