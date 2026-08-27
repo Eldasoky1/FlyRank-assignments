@@ -1,10 +1,8 @@
-"""Auth API — Stage 2: public route and unverified protected route.
+"""Auth API — Stage 3: profile route token verification.
 
-Adds:
-- GET /public/info        -> 200, no auth required
-- GET /protected/profile  -> stub: only checks the Authorization header
-  format (must be `Bearer <token>`); returns 401 if missing/invalid.
-  Real token verification lands in the next stage.
+`/protected/profile` now actually verifies the bearer token by calling
+`supabase.auth.get_user(token)`. Missing/invalid/expired/tampered tokens
+return 401; a valid token returns 200 with the user's data.
 """
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -16,7 +14,7 @@ from supabase_client import SupabaseError, create_auth_backend
 app = FastAPI(
     title="Auth API",
     description="Sign up, log in, log out and protected routes backed by Supabase Auth.",
-    version="1.2.0",
+    version="1.3.0",
 )
 
 AUTH = create_auth_backend()
@@ -78,9 +76,14 @@ def public_info():
 
 @app.get("/protected/profile")
 def protected_profile(token: str = Depends(get_bearer_token)):
-    # Stage 2 stub: only the header format is checked. The token is NOT yet
-    # verified against Supabase — real verification arrives in Stage 3.
-    return {"stub": True, "note": "token format ok, verification coming next stage"}
+    user = AUTH.get_user(token)
+    if user is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid, expired or tampered token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return {"user": user.to_dict()}
 
 
 
