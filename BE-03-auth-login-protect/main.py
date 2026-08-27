@@ -1,9 +1,12 @@
-"""Auth API — Stage 4: auth middleware and logout endpoint.
+"""Auth API — Stage 5: Swagger UI documentation with bearer auth.
 
-- Token verification is extracted into a reusable dependency
-  (`get_current_user`) and applied to `/protected/profile` AND a new
-  `/protected/dashboard`.
-- `POST /auth/logout` is protected: it calls `signOut` and returns 204.
+FastAPI serves `/docs` (Swagger UI) out of the box. Because the protected
+routes depend on the `HTTPBearer` security scheme, Swagger shows a lock icon
+on them and exposes an "Authorize" button. Test the flow by clicking
+Authorize -> "Try it out" on any protected route.
+
+To take the README screenshot, run the server and open /docs:
+    uvicorn main:app --reload    →  http://localhost:8000/docs
 """
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -15,7 +18,7 @@ from supabase_client import SupabaseError, create_auth_backend
 app = FastAPI(
     title="Auth API",
     description="Sign up, log in, log out and protected routes backed by Supabase Auth.",
-    version="1.4.0",
+    version="1.5.0",
 )
 
 AUTH = create_auth_backend()
