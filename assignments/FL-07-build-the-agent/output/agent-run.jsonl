@@ -1,0 +1,3 @@
+{"topics": ["LLM;AI", "security;breach", "cloudflare;workers;rust"], "items_kept": 0, "feeds_failed": 0, "lint": {"missing_sections": [], "links_total": 0, "words": 111, "under_500": true}, "file": "week-in-review-20260905-234702.md", "ts": "2026-09-05T23:47:02+00:00"}
+{"topics": ["regression;eval;automation"], "items_kept": 8, "feeds_failed": 0, "lint": {"missing_sections": [], "links_total": 2, "words": 396, "under_500": true}, "file": "week-in-review-20260905-234727.md", "ts": "2026-09-05T23:47:27+00:00"}
+{"topics": ["regression;eval;automation"], "items_kept": 8, "feeds_failed": 0, "lint": {"missing_sections": [], "links_total": 2, "words": 391, "under_500": true}, "file": "week-in-review-20260905-234812.md", "ts": "2026-09-05T23:48:12+00:00"}

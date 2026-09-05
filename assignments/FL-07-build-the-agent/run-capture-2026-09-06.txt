@@ -1,0 +1,24 @@
+﻿[1/5] reading run history and choosing topics ...
+      topics -> ['regression;eval;automation']
+[2/5] gathering live feeds ...
+      fetched 1300 raw items, 0 feed failure(s)
+[3/5] filtering + synthesizing to signals ...
+      8 signal(s) kept
+[4/5] drafting four sections from weekly log + signals ...
+[5/5] linting + writing output; gate: NOT submitted ...
+      wrote week-in-review-20260905-234812.md | gate: OK | words=391
+{
+  "topics": [
+    "regression;eval;automation"
+  ],
+  "items": 8,
+  "feed_failures": [],
+  "lint": {
+    "missing_sections": [],
+    "links_total": 2,
+    "words": 391,
+    "under_500": true
+  },
+  "file": "week-in-review-20260905-234812.md",
+  "gate": "Ready for review - not submitted."
+}
