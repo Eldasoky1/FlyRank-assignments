@@ -1,0 +1,60 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Demo — Week in Review agent</title>
+<style>
+  :root{--bg:#0f1117;--fg:#d7dae3;--dim:#6b7280;--acc:#4ade80;--panel:#1a1e28;}
+  *{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font:15px/1.6 "Cascadia Mono","Consolas",monospace}
+  .wrap{max-width:1000px;margin:0 auto;padding:26px 20px 40px}
+  .top{display:flex;align-items:baseline;gap:12px;padding-bottom:14px;border-bottom:1px solid #262b3a}
+  .top h1{margin:0;font-size:20px;letter-spacing:.3px}
+  .top .chan{color:#818cf8}.top .tag{margin-left:auto;font-size:12px;color:var(--dim)}
+  .stage{margin:18px 0 18px;display:flex;gap:10px;flex-wrap:wrap}
+  .chip{font-size:12px;padding:3px 11px;border:1px solid #2c3244;border-radius:999px;color:var(--dim);transition:all .4s}
+  .chip.act{color:var(--acc);border-color:var(--acc)}
+  .term{background:#0b0d13;border:1px solid #222738;border-radius:10px;padding:18px 20px;min-height:430px;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+  .line{white-space:pre-wrap;word-break:break-word;min-height:1.1em;margin:2px 0}
+  .cap{margin-top:15px;color:var(--dim);font-size:13px}
+  .cap b{color:var(--fg)}
+  .gate{margin-top:22px;border:1px solid #7f1d1d;border-left-width:5px;background:#1c1214;border-radius:8px;padding:14px 18px;color:#fdaaaa;opacity:0;transition:opacity 1.2s}
+</style></head><body><div class="wrap">
+  <div class="top"><h1>Week in Review <span class="chan">— the agent, end to end</span></h1><span class="tag">python week_in_review.py --log weekly-log-2026-09-04.md</span></div>
+  <div class="stage" id="stage"></div>
+  <div class="term" id="term"></div>
+  <div class="cap" id="cap"></div>
+  <div class="gate" id="gate">Guardrail in action: after drafting, the run <b>stops</b> at a sign-off line — &quot;Ready for review — not submitted.&quot; The agent has no portal credentials, opens no submission connection, and can only write to its own output directory. A human reads the brief, checks the flagged items, then posts it. Nothing ships without a human.</div>
+</div>
+<script>
+const LINES = [
+ "READY.",
+ "$ python week_in_review.py --log weekly-log-2026-09-04.md",
+ "[1/5] reading run history and choosing topics ...",
+ "      topics -> ['regression;eval;automation']   (last week was thin -> agent proposes recovery terms)",
+ "      reason: run 1 kept 0 signals; E1 thin-run recovery switched the topic set",
+ "[2/5] gathering live feeds ...",
+ "      fetched 1300 raw items, 0 feed failure(s)      [7 live RSS feeds]",
+ "[3/5] filtering + synthesizing to signals ...",
+ "      8 signal(s) kept                               [matched LLM/eval/automation terms]",
+ "[4/5] drafting four sections from weekly log + signals ...",
+ "      Summary / Blocked / Signals / Next",
+ "[5/5] linting + writing output; gate: NOT submitted ...",
+ "      wrote week-in-review-20260905-234812.md | gate: OK | words=391",
+ "{",
+ "  \"topics\": [\"regression;eval;automation\"], \"items\": 8, \"feed_failures\": [],",
+ "  \"lint\": { \"missing_sections\": [], \"links_total\": 2, \"words\": 391, \"under_500\": true },",
+ "  \"file\": \"week-in-review-20260905-234812.md\",",
+ "  \"gate\": \"Ready for review - not submitted.\"",
+ "}",
+ "DONE.  The brief is on disk; a human signs off before anything ships."
+];
+const CHIPS = ["reads run-history","gathers 7 live feeds","picks topics","drafts 4 sections","lints + signs off"];
+const STEP_AT = [0, 3600, 6800, 12200, 15000];
+const term=document.getElementById('term'),cap=document.getElementById('cap');
+const ch=CHIPS.map((t,i)=>{const d=document.createElement('span');d.className='chip';d.textContent=' '+(i+1)+' '+t;document.getElementById('stage').appendChild(d);return d;});
+let t=0;
+const LINE_MS = 1900; // per line pace -> ~21 lines in ~40s, then a long tell-the-story pause to ~3m10s
+function next(){ if(t>=LINES.length){ cap.innerHTML='<b>Full loop shown.</b> Request (weekly log + live feeds) → result (brief on disk + gate). This is the unedited run from run-capture-2026-09-06.txt.'; setTimeout(endOfPlay,1500); return; }
+  const d=document.createElement('div'); d.className='line'; term.appendChild(d); d.textContent=LINES[t].startsWith('$')?LINES[t]:'  '+LINES[t]; t++;
+  STEP_AT.forEach((at,i)=>{ if(Math.abs(at-(t*LINE_MS))<900) ch[i].classList.add('act'); });
+  setTimeout(next, LINE_MS + (LINES[t]?LINES[t].startsWith('{')?400:0:0));
+}
+function endOfPlay(){ gate.style.opacity=1; }
+setTimeout(()=>{ cap.innerHTML='<b>Stage ready.</b> Replaying the real captured run (unedited console).'; setTimeout(next,600); }, 600);
+</script></body></html>
