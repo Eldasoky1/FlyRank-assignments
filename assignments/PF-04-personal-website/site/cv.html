@@ -4,87 +4,227 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ahmed Eldasoky — Curriculum Vitae</title>
-<meta name="description" content="Curriculum vitae of Ahmed Eldasoky — Backend AI Engineering intern at FlyRank, E-JUST student.">
+<meta name="description" content="Curriculum Vitae of Ahmed Eldasoky — Applied AI Engineer, backend architecture & agentic AI (MCP). CompliAI backend lead, FlyRank AI intern, E-JUST.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2307f49e'/%3E%3Ctext x='50' y='68' font-size='52' font-family='Arial' font-weight='bold' text-anchor='middle' fill='%23031316'%3EAE%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg: #04080a; --bg-2: #071013;
+    --panel: rgba(13, 31, 35, 0.72); --panel-2: rgba(18, 40, 45, 0.55);
+    --line: rgba(7, 244, 158, 0.16); --line-2: rgba(255,255,255,0.08);
+    --accent: #07f49e; --accent-2: #38e1ff; --accent-3: #a06bff;
+    --text: #eaf7f3; --muted: #93ada5;
+  }
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #f6f9f8; color: #13201c; line-height: 1.55; padding: 40px 16px; }
-  .page { max-width: 720px; margin: 0 auto; background: #fff; border-radius: 18px; box-shadow: 0 10px 40px rgba(3,19,22,.10); padding: 40px 34px; }
-  h1 { font-size: 1.7rem; letter-spacing: -0.01em; }
-  .sub { color: #2f7d65; font-weight: 600; margin: 6px 0 14px; }
-  .contact { font-size: 13.5px; color: #3c534c; padding-bottom: 18px; border-bottom: 2px solid #d9ebe5; margin-bottom: 22px; }
-  .contact a { color: #0a8f63; text-decoration: none; }
-  section { margin-bottom: 24px; }
-  h2 { font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #0f6b4f; margin-bottom: 10px; }
-  .item { margin-bottom: 14px; }
-  .item .head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px; font-weight: 700; font-size: 15px; }
-  .item .head .when { color: #66807a; font-weight: 500; font-size: 13px; white-space: nowrap; }
-  .org { font-size: 13.5px; color: #0a8f63; font-weight: 600; }
-  ul { padding-left: 18px; }
-  li, p { font-size: 14px; color: #263a34; }
-  .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-  .tags span { font-size: 12.5px; background: #e7f5f0; color: #0a5d42; padding: 4px 10px; border-radius: 999px; }
-  footer { text-align: center; font-size: 12.5px; color: #8aa39c; margin-top: 8px; }
+  body { font-family: "Space Grotesk", system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+  .bg { position: fixed; inset: 0; z-index: -2; overflow: hidden;
+    background: radial-gradient(1000px 500px at 80% -10%, rgba(7,244,158,0.10), transparent 60%),
+                radial-gradient(800px 500px at 0% 100%, rgba(160,107,255,0.10), transparent 55%),
+                linear-gradient(180deg, var(--bg), var(--bg-2)); }
+  .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.4; mix-blend-mode: screen; }
+  .blob-1 { width: 440px; height: 440px; right: -120px; top: -100px; background: rgba(7,244,158,0.5); animation: d1 24s ease-in-out infinite alternate; }
+  .blob-2 { width: 380px; height: 380px; left: -120px; bottom: -120px; background: rgba(160,107,255,0.45); animation: d2 30s ease-in-out infinite alternate; }
+  @keyframes d1 { to { transform: translate(-70px, 70px) scale(1.1); } }
+  @keyframes d2 { to { transform: translate(60px, -60px) scale(1.15); } }
+
+  .page { max-width: 880px; margin: 0 auto; padding: 48px 26px 64px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 26px; }
+  .back { font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--accent); text-decoration: none; border: 1px solid var(--line); padding: 8px 14px; border-radius: 999px; background: var(--panel); transition: border-color .2s; }
+  .back:hover { border-color: var(--accent); }
+  .print-hint { font-size: 12.5px; color: var(--muted); border: 1px dashed var(--line-2); padding: 8px 14px; border-radius: 999px; }
+
+  header.cv { border: 1px solid var(--line); border-radius: 20px; background: linear-gradient(180deg, var(--panel-2), var(--panel)); padding: 32px; backdrop-filter: blur(8px); }
+  .home { color: var(--muted); text-decoration: none; font-size: 13.5px; display: inline-block; margin-bottom: 14px; }
+  .home:hover { color: var(--accent); }
+  h1 { font-size: clamp(2rem, 5vw, 2.8rem); letter-spacing: -0.02em;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2) 50%, var(--accent-3) 85%, var(--accent)); background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent; animation: huerot 9s linear infinite; }
+  @keyframes huerot { to { background-position: 300% 0; } }
+  .role { color: var(--text); font-weight: 600; margin: 6px 0 4px; }
+  .meta { color: var(--muted); font-size: 14px; }
+  .contact { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: 18px; }
+  .contact a { color: var(--text); text-decoration: none; font-size: 13.5px; }
+  .contact a:hover { color: var(--accent); }
+  .contact .k { color: var(--accent); font-weight: 600; }
+
+  section { margin-top: 40px; }
+  h2 { display: flex; align-items: center; gap: 12px; font-size: 1.25rem; letter-spacing: -0.01em; margin-bottom: 18px; }
+  h2::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--line), transparent); }
+
+  p.summary { color: var(--muted); font-size: 15px; }
+  p.summary strong { color: var(--text); }
+
+  .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+  .sbox { border: 1px solid var(--line-2); background: var(--panel); border-radius: 14px; padding: 16px; }
+  .sbox .t { color: var(--accent); font-size: 12.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .sbox p { color: var(--muted); font-size: 13.5px; }
+
+  .entry { border: 1px solid var(--line-2); background: var(--panel); border-radius: 14px; padding: 18px; margin-bottom: 14px; }
+  .entry .top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px; align-items: baseline; }
+  .entry h3 { font-size: 1.05rem; }
+  .entry .org { color: var(--accent); font-size: 13.5px; font-weight: 600; }
+  .entry .when { color: var(--muted); font-size: 12.5px; }
+  .entry ul { margin-top: 8px; padding-left: 18px; }
+  .entry li { color: var(--muted); font-size: 14px; margin: 3px 0; }
+  .entry li::marker { color: var(--accent); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+  .tags span { font-size: 12px; color: var(--accent); border: 1px solid var(--line); background: rgba(7,244,158,0.06); padding: 3px 10px; border-radius: 999px; }
+
+  .ach { border: 1px solid var(--line-2); background: var(--panel); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; font-size: 14px; color: var(--muted); }
+  .ach strong { color: var(--text); }
+  .ach .aw { color: var(--accent); font-weight: 600; }
+
+  footer { margin-top: 48px; color: var(--muted); font-size: 12.5px; text-align: center; }
+
+  @media print {
+    body { background: #fff; color: #111; }
+    .bg, .bar, .home { display: none; }
+    .page { max-width: 100%; padding: 10mm; }
+    header.cv, .sbox, .entry, .ach { border-color: #ccc; background: #fff; }
+    h1 { color: #111; background: none; -webkit-text-fill-color: initial; animation: none; }
+    .entry .org, .entry li::marker, .sbox .t, .ach .aw { color: #0a7; }
+    p.summary, .entry li, .ach { color: #333; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
 <body>
+<div class="bg" aria-hidden="true"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+
 <div class="page">
-  <h1>Ahmed Eldasoky</h1>
-  <div class="sub">Backend AI Engineering Intern · Agentic AI Tools (MCP)</div>
-  <div class="contact">
-    Alexandria, Egypt &nbsp;·&nbsp;
-    <a href="mailto:ahmed.320240024@ejust.edu.eg">ahmed.320240024@ejust.edu.eg</a> &nbsp;·&nbsp;
-    <a href="https://github.com/Eldasoky1">github.com/Eldasoky1</a> &nbsp;·&nbsp;
-    <a href="https://www.linkedin.com/in/ahmed-eldasoky-b44b4332a">linkedin.com/in/ahmed-eldasoky-b44b4332a</a> &nbsp;·&nbsp;
-    <a href="/">ahmed-eldasoky.pages.dev</a>
+  <div class="bar">
+    <a class="back" href="/cv">← CV</a>
+    <span class="print-hint">🖨 Use your browser's Print → Save as PDF</span>
   </div>
 
+  <header class="cv">
+    <h1>Ahmed Eldasoky</h1>
+    <p class="role">Applied AI Engineer · Backend Architecture &amp; Agentic AI (MCP)</p>
+    <p class="meta">FastAPI · Node.js · PostgreSQL</p>
+    <div class="contact">
+      <span class="k">✉</span> <a href="mailto:ahmed.320240024@ejust.edu.eg">ahmed.320240024@ejust.edu.eg</a>
+      <span class="k">✆</span> <a href="tel:+201221875193">+20 122 187 5193</a>
+      <span class="k">◎</span> <a href="https://linkedin.com/in/ahmed-eldasoky-b44b4332a" target="_blank" rel="noopener">linkedin.com/in/ahmed-eldasoky</a>
+      <span class="k">⌥</span> <a href="https://github.com/Eldasoky1" target="_blank" rel="noopener">github.com/Eldasoky1</a>
+    </div>
+  </header>
+
   <section>
-    <h2>Profile</h2>
-    <p>Applied-AI backend engineer focused on API design, data pipelines, and agentic systems built with the Model Context Protocol. Practical, evidence-driven, and shipping real tooling — including live MCP servers, automation workflows, and AI personal agents during my internship at FlyRank.</p>
+    <h2>Summary</h2>
+    <p class="summary">I build backend systems where data stops being raw and starts being actionable. As <strong>Backend Lead and AI Architect on CompliAI</strong> — a B2B SaaS platform automating EU AI Act compliance — I design the full-stack infrastructure connecting React frontends, PostgreSQL schemas, and GPT-4o inference pipelines. I'm also an <strong>AI Intern at FlyRank</strong>, working on the automation layer behind organic and AI-search visibility, and I build agentic infrastructure on the side: custom <strong>MCP (Model Context Protocol) servers</strong> that give Claude direct, on-demand control over real systems — a local machine, a LinkedIn account, a browser session. E-JUST's rigorous CS curriculum gave me the foundations: embedded systems, operating systems, database internals, algorithms — then I took those first principles into production: leading a <strong>7-engineer</strong> cross-functional team on CompliAI, shipping <strong>EcoLensAI</strong> (3rd place, Green Entrepreneurship Competition) with a 4-person team.</p>
+  </section>
+
+  <section>
+    <h2>Technical Skills</h2>
+    <div class="skills">
+      <div class="sbox"><div class="t">Languages</div><p>TypeScript, JavaScript, Python</p></div>
+      <div class="sbox"><div class="t">Backend &amp; APIs</div><p>Node.js (Express), FastAPI, REST API Design, PostgreSQL, Supabase, SQLAlchemy</p></div>
+      <div class="sbox"><div class="t">AI &amp; ML</div><p>GPT-4o / LLM Integration, PyTorch, Computer Vision, RAG Pipelines</p></div>
+      <div class="sbox"><div class="t">Automation &amp; MCP</div><p>Playwright, Puppeteer, MCP (Model Context Protocol), AI Agent Tooling</p></div>
+      <div class="sbox"><div class="t">Dev &amp; Infra</div><p>Git, Docker, CI/CD, CLI Tooling</p></div>
+      <div class="sbox"><div class="t">Frontend</div><p>HTML5, CSS3, React, Vue.js</p></div>
+    </div>
   </section>
 
   <section>
     <h2>Experience</h2>
-    <div class="item">
-      <div class="head"><span>Backend AI Engineering Intern — FlyRank</span><span class="when">2026 · Present</span></div>
+
+    <div class="entry">
+      <div class="top"><h3>AI Architect / Backend Lead</h3><span class="when">Mar 2024 – Present</span></div>
+      <div class="org">CompliAI — B2B SaaS · EU AI Act compliance automation</div>
       <ul>
-        <li>Build and maintain MCP servers and clients over the <code>stdio</code> transport.</li>
-        <li>Design automation workflows and personal agents, from weekly brief pipelines to a review-scout agent.</li>
-        <li>Document agent architectures, real end-to-end runs, and honest limitations.</li>
+        <li>Designed and built full-stack B2B SaaS infrastructure for EU AI Act compliance automation.</li>
+        <li>Architected React + PostgreSQL + GPT-4o inference pipeline connecting frontend to AI backend.</li>
+        <li>Led a cross-functional team of 7 engineers across frontend, backend, and AI/ML, managing sprint planning and code reviews.</li>
+        <li>Developed agentic AI systems for automated compliance document processing.</li>
       </ul>
+    </div>
+
+    <div class="entry">
+      <div class="top"><h3>AI Intern</h3><span class="when">Jul 2026 – Aug 2026</span></div>
+      <div class="org">FlyRank — automation for organic &amp; AI-search visibility</div>
+      <ul>
+        <li>Automation layer for organic and AI-search visibility during an intensive 8-week internship program.</li>
+        <li>Developing pipelines to enhance product visibility and performance using advanced AI capabilities.</li>
+      </ul>
+    </div>
+
+    <div class="entry">
+      <div class="top"><h3>Backend Developer</h3><span class="when">Jan 2025 – Jul 2025</span></div>
+      <div class="org">AI-Powered CRM Pipeline &amp; Lead Enrichment</div>
+      <ul>
+        <li>Built an automated web-scraping microservice (Node.js + Puppeteer) to navigate pages and extract raw metadata at scale.</li>
+        <li>Integrated GPT-4o to dynamically parse unstructured scraped data into structured JSON formats (names, roles, emails).</li>
+        <li>Architected a scalable, multi-tenant Supabase and PostgreSQL schema secured via Row Level Security (RLS).</li>
+        <li>Delivered a robust Express.js REST API with strict error handling, protected routing, and comprehensive Jest test coverage.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Projects</h2>
+
+    <div class="entry">
+      <div class="top"><h3>LinkedIn Automation MCP Server</h3><span class="when">Personal project</span></div>
+      <div class="org">19-tool MCP server · profile management, connections, messaging, job search</div>
+      <ul>
+        <li>Engineered a smart connection-prioritization algorithm sorting by shared university → shared industry → other.</li>
+        <li>Implemented session persistence with cookie-based authentication and browser crash auto-recovery.</li>
+        <li>Solved LinkedIn DOM reverse-engineering challenges for reliable profile scraping.</li>
+      </ul>
+      <div class="tags"><span>TypeScript</span><span>Playwright</span><span>MCP SDK</span></div>
+    </div>
+
+    <div class="entry">
+      <div class="top"><h3>Local PC Control MCP Server</h3><span class="when">Personal project</span></div>
+      <div class="org">12-tool MCP server · direct local machine access for AI assistants</div>
+      <ul>
+        <li>File I/O, shell execution, system monitoring, clipboard management.</li>
+        <li>Implemented path validation, shell escaping, and permission-safe file operations for Windows.</li>
+        <li>Integrated with Claude Desktop's MCP runtime for on-demand tool execution.</li>
+      </ul>
+      <div class="tags"><span>TypeScript</span><span>Node.js</span><span>MCP SDK</span></div>
+    </div>
+
+    <div class="entry">
+      <div class="top"><h3>RC5 AVR Microcontroller Simulator</h3><span class="when">Aug 2025 – Jan 2026</span></div>
+      <div class="org">Browser-based AVR simulator</div>
+      <ul>
+        <li>Functional code editor, real-time I/O port tracking, register/SRAM visualization.</li>
+        <li>Implemented RC5 encryption natively in AVR Assembly, with a custom JavaScript interpreter for live in-browser debugging.</li>
+      </ul>
+      <div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>AVR Assembly</span></div>
     </div>
   </section>
 
   <section>
     <h2>Education</h2>
-    <div class="item">
-      <div class="head"><span>Egypt–Japan University of Science and Technology (E-JUST)</span><span class="when">Present</span></div>
-      <div class="org">Computer Science &amp; Engineering</div>
-      <p>Coursework spanning algorithms, distributed systems, and software engineering.</p>
-    </div>
-  </section>
-
-  <section>
-    <h2>Projects &amp; Open Source</h2>
-    <div class="item">
-      <div class="head"><span><a href="https://github.com/Eldasoky1">github.com/Eldasoky1</a></span></div>
+    <div class="entry">
+      <div class="top"><h3>B.Sc. Computer Science</h3><span class="when">Year 2</span></div>
+      <div class="org">Egypt-Japan University of Science &amp; Technology (E-JUST) — Alexandria, Egypt</div>
       <ul>
-        <li>MCP servers/clients and recursive agent tooling, with reproducible end-to-end runs and evaluation results.</li>
-        <li>Automation agents with real-world recovery behavior (e.g. auto-retry on weak input, human signoff gates).</li>
+        <li>Relevant coursework: Embedded Systems (AVR), Data Structures &amp; Algorithms, Database Systems, Software Engineering, Operations Research, Operating Systems, Computer Organization, Full Stack Web Development.</li>
       </ul>
     </div>
   </section>
 
   <section>
-    <h2>Technical Skills</h2>
-    <div class="tags">
-      <span>Python</span><span>FastAPI</span><span>Node.js</span><span>TypeScript</span>
-      <span>PostgreSQL</span><span>LLM APIs &amp; MCP</span><span>REST API design</span>
-      <span>Automation &amp; orchestration</span><span>Git / GitHub</span><span>Cloudflare</span>
-    </div>
+    <h2>Achievements &amp; Awards</h2>
+    <div class="ach"><span class="aw">3rd Place, Green Entrepreneurship Competition</span> — <strong>EcoLensAI</strong>: AI-powered plant disease detection system, built with a 4-person team.</div>
+    <div class="ach"><span class="aw">FlyRank AI Internship</span> — Confirmed 8-week program, Jul 2026.</div>
   </section>
 
-  <footer>References available on request.</footer>
+  <section>
+    <h2>Certifications</h2>
+    <div class="ach"><span class="aw">8th Baheya Breast Cancer Conference</span> (Oct 2025) — Awarded 25.75 AACME CME Credits.</div>
+  </section>
+
+  <footer>Last updated from <span class="mono">Ahmed_Eldasoky_Resume_Updated-v2</span> · ahmed-eldasoky.pages.dev</footer>
 </div>
 </body>
 </html>

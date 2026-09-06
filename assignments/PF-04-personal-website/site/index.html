@@ -3,126 +3,345 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ahmed Eldasoky — Backend AI Engineer</title>
-<meta name="description" content="Ahmed Eldasoky — Backend AI Engineering intern at FlyRank, E-JUST student. Agentic AI (MCP), FastAPI, Node.js, PostgreSQL.">
+<title>Ahmed Eldasoky — Applied AI Engineer & Agentic AI (MCP)</title>
+<meta name="description" content="Ahmed Eldasoky — Applied AI Engineer. Backend architecture & agentic AI (MCP). FastAPI, Node.js, PostgreSQL. CompliAI backend lead, FlyRank AI intern, E-JUST computer science.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2307f49e'/%3E%3Ctext x='50' y='68' font-size='52' font-family='Arial' font-weight='bold' text-anchor='middle' fill='%23031316'%3EAE%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #031316;
-    --panel: #0a1c1f;
-    --panel-2: #0e2529;
+    --bg: #04080a;
+    --bg-2: #071013;
+    --panel: rgba(13, 31, 35, 0.72);
+    --panel-2: rgba(18, 40, 45, 0.6);
     --line: rgba(7, 244, 158, 0.16);
+    --line-2: rgba(255, 255, 255, 0.08);
     --accent: #07f49e;
-    --text: #e9f6f2;
-    --muted: #9fb4ad;
+    --accent-2: #38e1ff;
+    --accent-3: #a06bff;
+    --text: #eaf7f3;
+    --muted: #93ada5;
+    --radius: 18px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background:
-      radial-gradient(900px 420px at 80% -10%, rgba(7,244,158,0.14), transparent 60%),
-      radial-gradient(700px 380px at 0% 0%, rgba(7,244,158,0.07), transparent 55%),
-      var(--bg);
+    font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
     color: var(--text);
     line-height: 1.6;
+    overflow-x: hidden;
     min-height: 100vh;
   }
-  main { max-width: 940px; margin: 0 auto; padding: 72px 24px 56px; }
-  .eyebrow {
-    font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--accent); font-weight: 600;
-  }
-  h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.08; margin: 14px 0 10px; letter-spacing: -0.02em; }
-  h2 { font-size: clamp(1.2rem, 3vw, 1.5rem); margin-bottom: 14px; letter-spacing: -0.01em; }
-  .tagline { color: var(--muted); font-size: 1.08rem; max-width: 640px; }
-  .links { display: flex; flex-wrap: wrap; gap: 10px; margin: 28px 0 40px; }
-  .links a {
-    display: inline-flex; align-items: center; gap: 8px;
-    border: 1px solid var(--line); background: var(--panel);
-    color: var(--text); text-decoration: none; font-size: 14px; font-weight: 600;
-    padding: 10px 16px; border-radius: 999px; transition: all .16s ease;
-  }
-  .links a:hover { border-color: var(--accent); background: var(--panel-2); transform: translateY(-1px); }
-  .links a.pending { color: var(--muted); }
-  .links a .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-  section { margin-bottom: 40px; }
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-  .card {
-    background: linear-gradient(180deg, var(--panel-2), var(--panel));
-    border: 1px solid var(--line); border-radius: 16px; padding: 20px;
-  }
-  .card h3 { font-size: 15px; margin-bottom: 6px; }
-  .card p { color: var(--muted); font-size: 14px; }
-  .card code {
-    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
-    font-size: 12px; background: rgba(7,244,158,0.08); color: var(--accent);
-    padding: 1px 6px; border-radius: 6px;
-  }
-  footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace; }
+
+  /* ---------- animated background ---------- */
+  .bg { position: fixed; inset: 0; z-index: -2; overflow: hidden; background:
+      radial-gradient(1200px 500px at 85% -10%, rgba(7,244,158,0.12), transparent 60%),
+      radial-gradient(900px 480px at -5% 0%, rgba(160,107,255,0.10), transparent 55%),
+      linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%); }
+  .blob { position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.5; mix-blend-mode: screen; }
+  .blob-1 { width: 520px; height: 520px; left: -140px; top: -120px; background: rgba(7,244,158,0.55); animation: drift1 26s ease-in-out infinite alternate; }
+  .blob-2 { width: 460px; height: 460px; right: -120px; top: 12%; background: rgba(160,107,255,0.5); animation: drift2 32s ease-in-out infinite alternate; }
+  .blob-3 { width: 420px; height: 420px; left: 30%; bottom: -180px; background: rgba(56,225,255,0.4); animation: drift3 38s ease-in-out infinite alternate; }
+  @keyframes drift1 { to { transform: translate(120px, 90px) scale(1.15); } }
+  @keyframes drift2 { to { transform: translate(-110px, 70px) scale(0.9); } }
+  @keyframes drift3 { to { transform: translate(80px, -100px) scale(1.2); } }
+  .grid-overlay { position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size: 54px 54px;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 20%, #000 30%, transparent 78%); }
+
+  main { max-width: 1040px; margin: 0 auto; padding: 40px 24px 60px; position: relative; }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s cubic-bezier(.22,.7,.3,1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 84px 0 40px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px;
+    font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+    font-weight: 600; border: 1px solid var(--line); background: var(--panel);
+    padding: 8px 14px; border-radius: 999px; backdrop-filter: blur(8px); }
+  .eyebrow .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    box-shadow: 0 0 0 0 rgba(7,244,158,0.6); animation: pulse 2.2s ease-out infinite; }
+  @keyframes pulse { 70% { box-shadow: 0 0 0 12px rgba(7,244,158,0); } 100% { box-shadow: 0 0 0 0 rgba(7,244,158,0); } }
+
+  h1 { margin: 26px 0 12px; font-size: clamp(2.6rem, 7vw, 4.2rem); line-height: 1.04; letter-spacing: -0.03em;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2) 45%, var(--accent-3) 80%, var(--accent));
+    background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: huerot 8s linear infinite; }
+  @keyframes huerot { to { background-position: 300% 0; } }
+
+  .tagline { color: var(--text); font-size: clamp(1.05rem, 2.4vw, 1.3rem); max-width: 720px; font-weight: 500; }
+  .tagline em { color: var(--accent); font-style: normal; }
+  .sub { color: var(--muted); max-width: 680px; margin-top: 14px; }
+
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 30px 0 8px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 999px;
+    font-weight: 600; text-decoration: none; font-size: 15px; transition: all .18s ease; }
+  .btn-primary { background: linear-gradient(120deg, var(--accent), var(--accent-2)); color: #04100c;
+    box-shadow: 0 8px 30px -8px rgba(7,244,158,0.55); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 40px -8px rgba(7,244,158,0.7); }
+  .btn-ghost { border: 1px solid var(--line); background: var(--panel); color: var(--text); backdrop-filter: blur(8px); }
+  .btn-ghost:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--muted);
+    border: 1px solid var(--line-2); background: rgba(255,255,255,0.02); padding: 8px 14px; border-radius: 999px; }
+  .chip a { color: var(--muted); text-decoration: none; transition: color .15s; }
+  .chip a:hover { color: var(--accent); }
+  .chip .glyph { color: var(--accent); }
+
+  /* ---------- stats ---------- */
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin: 56px 0; }
+  .stat { border: 1px solid var(--line-2); background: var(--panel-2); border-radius: var(--radius);
+    padding: 18px; backdrop-filter: blur(8px); position: relative; overflow: hidden; transition: border-color .2s, transform .2s; }
+  .stat:hover { border-color: var(--line); transform: translateY(-3px); }
+  .stat .num { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.02em;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat .lbl { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
+  /* ---------- sections ---------- */
+  section { margin: 64px 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 26px; }
+  .sec-head .idx { font-family: "JetBrains Mono", monospace; color: var(--accent); font-size: 14px; }
+  .sec-head h2 { font-size: clamp(1.4rem, 3.4vw, 1.9rem); letter-spacing: -0.02em; }
+
+  /* ---------- skills marquee ---------- */
+  .marquee { position: relative; overflow: hidden; border: 1px solid var(--line-2);
+    background: var(--panel-2); border-radius: var(--radius); padding: 16px 0; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .track { display: flex; gap: 12px; width: max-content; animation: scroll 30s linear infinite; }
+  .track.reverse { animation-direction: reverse; animation-duration: 38s; }
+  .marquee:hover .track { animation-play-state: paused; }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+  .skill { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 14px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--text); padding: 9px 16px; border-radius: 999px; }
+  .skill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* ---------- cards ---------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+  .card { position: relative; background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line-2); border-radius: var(--radius); padding: 24px; backdrop-filter: blur(8px);
+    transition: transform .25s cubic-bezier(.22,.7,.3,1), border-color .25s, box-shadow .25s; }
+  .card:hover { transform: translateY(-6px); border-color: var(--line); box-shadow: 0 24px 50px -28px rgba(7,244,158,0.35); }
+  .card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(300px 120px at var(--mx,50%) 0%, rgba(7,244,158,0.10), transparent 60%); opacity: 0; transition: opacity .25s; }
+  .card:hover::after { opacity: 1; }
+  .card .ico { font-size: 1.5rem; margin-bottom: 12px; }
+  .card h3 { font-size: 1.15rem; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .card .org { color: var(--accent); font-size: 13px; font-weight: 600; }
+  .card .when { color: var(--muted); font-size: 12.5px; }
+  .card p { color: var(--muted); font-size: 14px; margin-top: 8px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+  .tags span { font-size: 12px; border: 1px solid var(--line); color: var(--accent);
+    background: rgba(7,244,158,0.06); padding: 3px 10px; border-radius: 999px; }
+
+  /* ---------- experience timeline ---------- */
+  .tl { position: relative; padding-left: 26px; border-left: 1px solid var(--line); }
+  .tl::before { content: ""; position: absolute; left: -3px; top: 0; bottom: 0; width: 5px; border-radius: 999px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2), var(--accent-3)); animation: grow 1.6s ease forwards; transform-origin: top; }
+  @keyframes grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+  .tl-item { position: relative; margin-bottom: 30px; }
+  .tl-item::before { content: ""; position: absolute; left: -33px; top: 6px; width: 12px; height: 12px; border-radius: 50%;
+    background: var(--bg); border: 2px solid var(--accent); box-shadow: 0 0 14px rgba(7,244,158,0.6); }
+  .tl-item h3 { font-size: 1.1rem; }
+  .tl-item .row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px; align-items: baseline; }
+  .tl-item ul { margin-top: 8px; padding-left: 18px; }
+  .tl-item li { color: var(--muted); font-size: 14px; margin: 4px 0; }
+  .tl-item li::marker { color: var(--accent); }
+
+  footer { margin-top: 72px; padding: 24px 0; border-top: 1px solid var(--line-2); color: var(--muted); font-size: 13.5px;
+    display: flex; flex-wrap: wrap; gap: 10px 22px; justify-content: space-between; align-items: center; }
   footer a { color: var(--muted); }
-  .mono { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 0.9em; color: var(--accent); }
+  footer a:hover { color: var(--accent); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <div class="eyebrow">Backend AI Engineer · Alexandria, Egypt</div>
-  <h1>Ahmed Eldasoky</h1>
-  <p class="tagline">
-    I build applied-AI backend systems: API design, data pipelines, and agentic tools with the
-    Model Context Protocol. Currently a Backend AI Engineering intern at <strong>FlyRank</strong>
-    and a student at <strong>E-JUST</strong> (Egypt–Japan University of Science and Technology).
-  </p>
+<div class="bg" aria-hidden="true">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="grid-overlay"></div>
+</div>
 
-  <div class="links" aria-label="Links">
-    <a href="https://github.com/Eldasoky1"><span class="dot"></span>GitHub</a>
-    <a href="https://www.linkedin.com/in/ahmed-eldasoky-b44b4332a"><span class="dot"></span>LinkedIn</a>
-    <a href="mailto:ahmed.320240024@ejust.edu.eg"><span class="dot"></span>Email</a>
-    <a href="/cv.html"><span class="dot"></span>CV</a>
-    <a href="mailto:ahmed.320240024@ejust.edu.eg?subject=Book%20a%20call&body=Hi%20Ahmed,%20I%20would%20like%20to%20book%20a%20time%20to%20talk." class="pending">Book a call (email — replace with your Calendly)</a>
+<main>
+  <header class="hero reveal">
+    <div class="eyebrow"><span class="pulse"></span>Applied AI Engineer · Alexandria, Egypt</div>
+    <h1>Ahmed Eldasoky</h1>
+    <p class="tagline" id="typer"></p>
+    <p class="sub">Backend architecture &amp; <em>agentic AI (MCP)</em> — I build systems where data stops being raw and starts being actionable: AI Architect / Backend Lead on <strong>CompliAI</strong>, AI Intern at <strong>FlyRank</strong>, and eager MCP-server builder.</p>
+
+    <div class="cta">
+      <a class="btn btn-primary" href="/cv.html">View CV</a>
+      <a class="btn btn-ghost" href="https://github.com/Eldasoky1" target="_blank" rel="noopener">GitHub ↗</a>
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/ahmed-eldasoky-b44b4332a" target="_blank" rel="noopener">LinkedIn ↗</a>
+    </div>
+
+    <div class="chips">
+      <span class="chip"><span class="glyph">✉</span><a href="mailto:ahmed.320240024@ejust.edu.eg">ahmed.320240024@ejust.edu.eg</a></span>
+      <span class="chip"><span class="glyph">✆</span><a href="tel:+201221875193">+20 122 187 5193</a></span>
+      <span class="chip"><span class="glyph">◎</span><a href="mailto:ahmed.320240024@ejust.edu.eg?subject=Book%20a%20call&body=Hi%20Ahmed,%20I%20would%20like%20to%20book%20a%20time%20to%20talk.">Book a call</a></span>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat reveal"><div class="num">7</div><div class="lbl">engineers led on CompliAI</div></div>
+    <div class="stat reveal"><div class="num">19</div><div class="lbl">tools · LinkedIn MCP server</div></div>
+    <div class="stat reveal"><div class="num">12</div><div class="lbl">tools · Local PC MCP server</div></div>
+    <div class="stat reveal"><div class="num">3rd</div><div class="lbl">place · Green Entrepreneurship</div></div>
   </div>
 
-  <section>
-    <h2>What I build</h2>
-    <div class="cards">
-      <div class="card">
-        <h3>Agentic AI (MCP)</h3>
-        <p>Lightweight <code>stdio</code> MCP servers and clients over JSON-RPC — tools an agent can call to work with live data.</p>
+  <section class="reveal">
+    <div class="sec-head"><span class="idx">01</span><h2>Technical Skills</h2></div>
+    <div class="marquee">
+      <div class="track" id="tA"></div>
+    </div>
+    <div class="marquee" style="margin-top:12px">
+      <div class="track reverse" id="tB"></div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="idx">02</span><h2>Experience</h2></div>
+    <div class="tl">
+      <div class="tl-item">
+        <div class="row"><h3>AI Architect / Backend Lead — CompliAI</h3><span class="when">Mar 2024 – Present</span></div>
+        <ul>
+          <li>Designed and built full-stack B2B SaaS infrastructure for EU AI Act compliance automation.</li>
+          <li>Architected a React + PostgreSQL + GPT-4o inference pipeline connecting frontend to AI backend.</li>
+          <li>Led a cross-functional team of 7 engineers across frontend, backend, and AI/ML — sprint planning and code reviews.</li>
+          <li>Developed agentic AI systems for automated compliance document processing.</li>
+        </ul>
       </div>
-      <div class="card">
-        <h3>Backend architecture</h3>
-        <p>FastAPI and Node.js services, PostgreSQL-backed, designed around clean API contracts and observable data pipelines.</p>
+      <div class="tl-item">
+        <div class="row"><h3>AI Intern — FlyRank</h3><span class="when">Jul 2026 – Aug 2026</span></div>
+        <ul>
+          <li>Automation layer for organic and AI-search visibility during an intensive 8-week internship.</li>
+          <li>Built personal agents and MCP-backed workflows — plus this very site.</li>
+        </ul>
       </div>
-      <div class="card">
-        <h3>Automation &amp; agents</h3>
-        <p>At FlyRank I design and build workflows and personal agents — from weekly brief pipelines to a review-scout agent with a human signoff gate.</p>
+      <div class="tl-item">
+        <div class="row"><h3>Backend Developer — AI-Powered CRM Pipeline &amp; Lead Enrichment</h3><span class="when">Jan 2025 – Jul 2025</span></div>
+        <ul>
+          <li>Automated web-scraping microservice (Node.js + Puppeteer) extracting raw metadata at scale.</li>
+          <li>Integrated GPT-4o to parse unstructured scraped data into structured JSON (names, roles, emails).</li>
+          <li>Architected a scalable multi-tenant Supabase/PostgreSQL schema secured with Row Level Security.</li>
+          <li>Delivered an Express.js REST API with strict error handling, protected routing, and Jest coverage.</li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <section>
-    <h2>Now</h2>
-    <div class="cards">
+  <section class="reveal">
+    <div class="sec-head"><span class="idx">03</span><h2>Selected Projects</h2></div>
+    <div class="grid">
       <div class="card">
-        <h3>FlyRank AI internship</h3>
-        <p>Foundations track: explaining agent vs. workflow from live MCP evidence, building real personal agents, and shipping their documentation alongside this site.</p>
+        <div class="ico">🔗</div>
+        <h3>LinkedIn Automation MCP Server</h3>
+        <div class="org">19-tool MCP server</div>
+        <p>Profile management, connection automation, messaging, job search. Smart prioritization by shared university → industry, cookie-based sessions, browser crash auto-recovery.</p>
+        <div class="tags"><span>TypeScript</span><span>Playwright</span><span>MCP SDK</span></div>
       </div>
       <div class="card">
-        <h3>E-JUST studies</h3>
-        <p>Computer science &amp; distributed systems — compressing lectures, learning cloud-native architecture.</p>
+        <div class="ico">🖥</div>
+        <h3>Local PC Control MCP Server</h3>
+        <div class="org">12-tool MCP server</div>
+        <p>Direct local machine access for AI assistants: file I/O, shell execution, system monitoring, clipboard. Path validation + shell escaping + permission-safe operations.</p>
+        <div class="tags"><span>TypeScript</span><span>Node.js</span><span>MCP SDK</span></div>
       </div>
       <div class="card">
-        <h3>Open source</h3>
-        <p>Code lives on <a href="https://github.com/Eldasoky1">GitHub</a>, including the assignments behind the FlyRank work.</p>
+        <div class="ico">🔬</div>
+        <h3>RC5 AVR Microcontroller Simulator</h3>
+        <div class="org">Aug 2025 – Jan 2026</div>
+        <p>Browser-based AVR simulator with a code editor, real-time I/O tracking, register/SRAM visualization, and RC5 encryption written natively in AVR Assembly.</p>
+        <div class="tags"><span>HTML/CSS/JS</span><span>AVR Assembly</span></div>
+      </div>
+      <div class="card">
+        <div class="ico">🌿</div>
+        <h3>EcoLensAI</h3>
+        <div class="org">3rd place — Green Entrepreneurship Competition</div>
+        <p>AI-powered plant disease detection system, built and shipped with a 4-person team.</p>
+        <div class="tags"><span>Computer Vision</span><span>PyTorch</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <div class="sec-head"><span class="idx">04</span><h2>Education &amp; Recognition</h2></div>
+    <div class="grid">
+      <div class="card">
+        <div class="ico">🎓</div>
+        <h3>E-JUST</h3>
+        <div class="org">B.Sc. Computer Science — Year 2</div>
+        <p>Egypt–Japan University of Science &amp; Technology. Embedded systems (AVR), data structures &amp; algorithms, database systems, software engineering, operating systems, computer organization.</p>
+      </div>
+      <div class="card">
+        <div class="ico">🏆</div>
+        <h3>Awards &amp; Certifications</h3>
+        <p>3rd place — <strong>Green Entrepreneurship Competition</strong> (EcoLensAI) · Confirmed 8-week <strong>FlyRank AI Internship</strong> · 8th Baheya Breast Cancer Conference (Oct 2025) — 25.75 AACME CME credits.</p>
       </div>
     </div>
   </section>
 
   <footer>
-    <span>© <span id="yr"></span> Ahmed Eldasoky.</span>
+    <span>© <span id="yr"></span> Ahmed Eldasoky. Built by hand, deployed on Cloudflare Pages.</span>
     <span class="mono">https://ahmed-eldasoky.pages.dev</span>
   </footer>
 </main>
-<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+const phrases = [
+  "Applied AI Engineer — FastAPI · Node.js · PostgreSQL",
+  "Agentic AI (MCP) — giving LLMs real, on-demand control",
+  "EU AI Act compliance automation · B2B SaaS",
+  "E-JUST CS · building first principles into production"
+];
+let pi = 0, ci = 0, del = false;
+const typer = document.getElementById('typer');
+function tick() {
+  const cur = phrases[pi];
+  typer.textContent = cur.slice(0, ci);
+  if (!del && ci < cur.length) { ci++; setTimeout(tick, 40); }
+  else if (!del) { del = true; setTimeout(tick, 2600); }
+  else if (ci > 0) { ci--; setTimeout(tick, 18); }
+  else { del = false; pi = (pi + 1) % phrases.length; setTimeout(tick, 350); }
+}
+tick();
+
+const rowA = ['Python','TypeScript','JavaScript','Node.js (Express)','FastAPI','REST API Design','PostgreSQL','Supabase','SQLAlchemy','PyTorch','Computer Vision','RAG Pipelines'];
+const rowB = ['GPT-4o / LLM Integration','MCP (Model Context Protocol)','AI Agent Tooling','Playwright','Puppeteer','React','Vue.js','HTML5 / CSS3','Git','Docker','CI/CD','CLI Tooling'];
+function fill(el, items) {
+  el.innerHTML = items.map(s => `<span class="skill">${s}</span>`).join('');
+  el.innerHTML += el.innerHTML; // duplicate for seamless loop
+  el.innerHTML += el.innerHTML;
+}
+fill(document.getElementById('tA'), rowA);
+fill(document.getElementById('tB'), rowB);
+
+// mouse-follow glow on cards
+for (const c of document.querySelectorAll('.card')) {
+  c.addEventListener('pointermove', e => {
+    const r = c.getBoundingClientRect();
+    c.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(0) + '%');
+  });
+}
+
+// reveal on scroll
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
 </body>
 </html>
