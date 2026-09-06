@@ -39,11 +39,22 @@ The mandatory DNS write-up — see that file. Summary: DNS is the internet's pho
 
 ## How it was deployed (reproducible)
 
-1. API on the account: create Pages project `ahmed-eldasoky` (production branch `main`).
-2. `GET /accounts/{account}/pages/projects/ahmed-eldasoky/upload-token` → short-lived JWT.
-3. `POST /accounts/{account}/pages/projects/ahmed-eldasoky/deployments` with a `multipart/form-data` body:
-   - part `manifest` = `{ "index.html": <sha256>, "cv.html": <sha256> }`,
-   - one part per file, named by its content hash, file content as the value.
-4. Cloudflare serves the deployment at `https://ahmed-eldasoky.pages.dev` with an auto-issued HTTPS certificate (no custom domain needed — and no CNAME involved in this case; see `dns-walkthrough.md` for what a CNAME would add).
+Two credentials, two jobs:
 
-A fresh deployment would be: write the files → recompute the sha256 hashes → repeat step 2 and 3.
+**1. Assets** (scoped upload JWT, only valid ~30 min):
+- `GET /accounts/{account}/pages/projects/ahmed-eldasoky/upload-token` → short-lived JWT.
+- Per file, key = `blake3( base64(file_content) + file_ext )` truncated to 32 hex chars (the convention the build service expects).
+- `POST /accounts/{account}/pages/projects/ahmed-eldasoky/pages/assets/upload` (JWT auth) with a JSON array `[{ "key": <32-hex>, "value": "<base64>", "metadata": { "contentType": "text/html" }, "base64": true }]`, then `POST …/pages/assets/upsert-hashes` with `{ "hashes": [ … ] }`.
+
+**2. Deployment** (account credential, NOT the upload JWT — it is rejected with `9106 Authentication failed`):
+- `POST /accounts/{account}/pages/projects/ahmed-eldasoky/deployments` (account token) with a `multipart/form-data` body:
+  - part `branch` = `main`,
+  - part `manifest` = `{ "/index.html": <32-hex>, "/cv.html": <32-hex> }` — **leading-slash keys**, values = the asset keys from step 1.
+
+**Result:** `https://ahmed-eldasoky.pages.dev` serves with an auto-issued HTTPS certificate (no CNAME needed here — the `pages.dev` domain is already Cloudflare's own; see `dns-walkthrough.md` for what a CNAME adds on a custom domain).
+
+Notes:
+- The upload JWT **can't** create deployments; the account key **can**, but it does not put file *content* into the deployment — content comes from the asset store via the manifest, so assets must exist first.
+- Pages clean-URLs by default: `/cv.html` 308-redirects to `/cv`, which serves the CV. The site's `index.html` links to `/cv.html` and works through that redirect.
+
+A fresh deployment: write the files → recompute the 32-hex blake3 keys → re-upload assets → upsert → POST a new deployment.
