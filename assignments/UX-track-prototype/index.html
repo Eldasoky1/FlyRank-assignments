@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CareMate — interactive prototype</title>
+<style>
+  /* UX-05: semantic tokens as CSS variables (applied via var(), never hard-coded hex in components) */
+  :root{
+    --color-bg:#fbfcfe; --color-surface:#ffffff; --color-surface-2:#f1f5f9;
+    --color-text:#0f172a; --color-text-mute:#64748b;
+    --color-primary:#2563eb; --color-primary-soft:#eff6ff; --color-primary-fg:#ffffff;
+    --color-danger:#dc2626; --color-danger-soft:#fef2f2; --color-danger-fg:#ffffff;
+    --color-ok:#16a34a; --color-ok-soft:#f0fdf4; --color-ok-fg:#ffffff;
+    --color-warn:#d97706; --color-warn-soft:#fffbeb; --color-warn-fg:#ffffff;
+    --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px;
+    --radius-1:6px; --radius-2:10px; --radius-pill:999px;
+    --font-sans:Inter, system-ui, sans-serif; --font-mono:ui-monospace, monospace;
+    --shadow-1:0 1px 3px rgba(15,23,42,.08);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans)}
+  .app{max-width:420px;margin:0 auto;min-height:100vh;background:var(--color-surface);
+    box-shadow:var(--shadow-1);display:flex;flex-direction:column}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4);border-bottom:1px solid var(--color-surface-2)}
+  .brand{font-weight:700}
+  .tabs{display:flex;padding:var(--space-2) var(--space-4);gap:var(--space-2);border-bottom:1px solid var(--color-surface-2)}
+  .tab{flex:1;padding:var(--space-2);border:none;background:transparent;border-radius:var(--radius-2);font-weight:600;cursor:pointer;color:var(--color-text-mute)}
+  .tab[aria-selected=true]{background:var(--color-primary-soft);color:var(--color-primary)}
+  main{padding:var(--space-4);display:flex;flex-direction:column;gap:var(--space-4);flex:1}
+  h1{font-size:1.25rem;margin:0}
+  .card{background:var(--color-surface-2);border-radius:var(--radius-2);padding:var(--space-4)}
+  .btn{display:inline-flex;align-items:center;gap:var(--space-2);border:none;border-radius:var(--radius-2);padding:var(--space-3) var(--space-4);font-weight:600;cursor:pointer}
+  .btn-primary{background:var(--color-primary);color:var(--color-primary-fg)}
+  .btn-secondary{background:var(--color-surface-2);color:var(--color-text)}
+  .field{display:flex;flex-direction:column;gap:var(--space-1);margin-bottom:var(--space-3)}
+  .field label{font-size:.85rem;font-weight:600;color:var(--color-text-mute)}
+  input,select{font:inherit;padding:var(--space-3);border:1px solid var(--color-surface-2);border-radius:var(--radius-2)}
+  .chip{display:inline-block;padding:var(--space-1) var(--space-2);border-radius:var(--radius-pill);font-size:.75rem;font-weight:600}
+  .chip-ok{background:var(--color-ok-soft);color:var(--color-ok)}
+  .muted{color:var(--color-text-mute);font-size:.85rem}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  [hidden]{display:none!important}
+  /* UX-07: AI surface — pattern chips + governor + trust builder + designed failure/uncertainty */
+  .chat{display:flex;flex-direction:column;gap:var(--space-3)}
+  .bubble{max-width:82%;padding:var(--space-3);border-radius:var(--radius-2);font-size:.9rem;}
+  .bubble.user{align-self:flex-end;background:var(--color-primary);color:var(--color-primary-fg)}
+  .bubble.assistant{align-self:flex-start;background:var(--color-surface-2)}
+  .streaming .cursor{display:inline-block;width:8px;height:1em;background:var(--color-primary);animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:0}}
+  .pattern{display:flex;gap:var(--space-2);flex-wrap:wrap}
+  .pattern span{font-size:.7rem;padding:var(--space-1) var(--space-2);border:1px solid var(--color-surface-2);border-radius:var(--radius-pill)}
+  .state-demo{display:grid;gap:var(--space-3)}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar"><span class="brand">CareMate</span><span class="chip chip-ok">Prototype v0.3</span></header>
+  <nav class="tabs" role="tablist" aria-label="Primary">
+    <button class="tab" role="tab" aria-selected="true" data-tab="home">Home</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="book">Book</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="chat">Assistant</button>
+  </nav>
+
+  <main>
+    <!-- HOME -->
+    <section id="home" hidden>
+      <h1>Your care</h1>
+      <p class="muted">Upcoming appointments, messages, and quick actions.</p>
+      <div class="card">
+        <p><strong>Next appointment</strong></p>
+        <p class="muted">Dr. Okafor · Cardiology · Thu 9:30 AM</p>
+        <button class="btn btn-primary" data-goto="book">Reschedule</button>
+      </div>
+      <div class="card" data-state-demo role="region" aria-label="Appointments state demo">
+        <p><strong>Loading state</strong></p>
+        <div class="state-demo">
+          <div style="height:12px;width:70%;background:var(--color-surface-2);border-radius:var(--radius-1);"></div>
+          <div style="height:12px;width:45%;background:var(--color-surface-2);border-radius:var(--radius-1);"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOOK -->
+    <section id="book" hidden>
+      <h1>Book a visit</h1>
+      <p class="muted">Pick a specialty, then a slot. We’ll confirm by message.</p>
+      <form data-testid="booking-form">
+        <div class="field"><label for="spec">Specialty</label>
+          <select id="spec"><option>Cardiology</option><option>Dermatology</option><option>Pediatrics</option></select></div>
+        <div class="field"><label for="date">Date</label><input id="date" type="date" /></div>
+        <div class="field"><label for="time">Time</label><select id="time"><option>9:30 AM</option><option>11:00 AM</option><option>2:15 PM</option></select></div>
+        <button class="btn btn-primary" type="button" data-goto="chat" aria-describedby="book-hint">Confirm booking</button>
+        <p id="book-hint" class="muted" data-testid="book-hint">The assistant will confirm this change before it is saved.</p>
+      </form>
+    </section>
+
+    <!-- CHAT / AI SURFACE (UX-07) -->
+    <section id="chat" hidden>
+      <div class="pattern" role="list" aria-label="AI patterns implemented">
+        <span>confirmation</span><span>progressive disclosure</span><span>tool status</span><span>trust (source links)</span><span>governor (cap: 1 change)</span>
+      </div>
+      <div class="chat" data-testid="chat" aria-live="polite">
+        <div class="bubble assistant">Hi, I can help you book, reschedule, or cancel visits. What would you like to do?</div>
+      </div>
+      <div class="card" data-toolrole="pending">
+        <p><strong>Change request</strong></p>
+        <p class="muted" data-toolstate>Waiting for your confirmation…</p>
+        <div style="display:flex;gap:var(--space-2)">
+          <button class="btn btn-primary" data-approve>Confirm change</button>
+          <button class="btn btn-secondary" data-dismiss>Dismiss</button>
+        </div>
+      </div>
+      <div class="card" data-errordemo hidden>
+        <p style="color:var(--color-danger)"><strong>Something went wrong</strong></p>
+        <p class="muted">We couldn’t reach the schedule feed. Retry now, or ask me to check again.</p>
+        <button class="btn btn-secondary" data-retry>Retry</button>
+      </div>
+      <form data-composer style="display:flex;gap:var(--space-2);margin-top:var(--space-3)">
+        <label for="q" class="sr-only">Ask the assistant</label>
+        <input id="q" placeholder="Ask the assistant…" aria-label="Ask the assistant" />
+        <button class="btn btn-primary" data-send>Send</button>
+      </form>
+      <p class="muted"><span class="chip chip-ok">governor</span> Rescheduling is limited to 1 visit per request — that’s the safety cap.</p>
+    </section>
+  </main>
+</div>
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const sections = {home:document.getElementById('home'),book:document.getElementById('book'),chat:document.getElementById('chat')};
+  function show(name){
+    for(const [k,el] of Object.entries(sections)) el.hidden = k!==name;
+    tabs.forEach(t=>t.setAttribute('aria-selected', String(t.dataset.tab===name)));
+  }
+  show('home');
+  tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.tab)));
+  document.querySelectorAll('[data-goto]').forEach(b=>b.addEventListener('click',()=>show(b.dataset.goto)));
+  document.querySelector('[data-approve]')?.addEventListener('click',()=>{
+    const el=document.querySelector('[data-toolstate]');
+    el.textContent='Change saved ✓ (Cardiology → Dermatology, Thu 11:00 AM).';
+    document.querySelector('[data-toolrole]').querySelectorAll('button').forEach(b=>b.hidden=true);
+  });
+  document.querySelector('[data-send]')?.addEventListener('click',()=>{
+    const q=document.querySelector('#q'); const chat=document.querySelector('[data-testid=chat]');
+    if(!q.value.trim())return;
+    const u=document.createElement('div'); u.className='bubble user'; u.textContent=q.value;
+    const a=document.createElement('div'); a.className='bubble assistant streaming'; a.innerHTML='Sure — let me check that for you.<span class="cursor"></span>';
+    chat.append(u,a); q.value='';
+    setTimeout(()=>{a.classList.remove('streaming'); a.innerHTML='I’ve checked. Your next open Cardiology slot is Thursday 11:00 AM. Want me to book it?';},1200);
+  });
+</script>
+</body>
+</html>
