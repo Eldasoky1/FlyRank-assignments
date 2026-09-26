@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Orbit — First 3D experience on the web</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#0b1020;color:#e2e8f0;
+    font-family:Inter,system-ui,sans-serif;}
+  #app{width:100vw;height:100vh;display:block;}
+  .ui{position:fixed;left:20px;bottom:20px;z-index:5;max-width:min(520px,90vw);}
+  .ui h1{font-size:1.2rem;margin:0;letter-spacing:0.02em;}
+  .ui p{font-size:0.85rem;color:#94a3b8;line-height:1.5;margin:0.4rem 0 0;}
+  .fallback{position:fixed;inset:0;display:grid;place-items:center;color:#94a3b8;text-align:center;padding:1rem;}
+</style>
+</head>
+<body>
+<div class="ui">
+  <h1>Orbit — a tiny 3D scene</h1>
+  <p>Drag to rotate · scroll to zoom · auto-orbits. Lazy-loaded: only loads after you interact is
+     deferred here; the module itself is a single small file to keep the bundle sane.</p>
+</div>
+<canvas id="app"></canvas>
+<div id="fallback" class="fallback" hidden>WebGL is unavailable in this browser.</div>
+<script type="module">
+  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
+  import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/OrbitControls.js';
+
+  const canvas = document.getElementById('app');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
+  camera.position.set(3, 2, 5);
+
+  const controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 1.5;
+
+  scene.add(new THREE.HemisphereLight(0x6699ff, 0x102030, 1.1));
+  const dir = new THREE.DirectionalLight(0xffffff, 1.6);
+  dir.position.set(5, 8, 4);
+  scene.add(dir);
+
+  const ring = new THREE.Mesh(
+    new THREE.TorusGeometry(1.6, 0.03, 16, 128),
+    new THREE.MeshStandardMaterial({ color: 0x2563eb, metalness: 0.7, roughness: 0.25 }),
+  );
+  scene.add(ring);
+
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.55, 64, 64),
+    new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0b3350, roughness: 0.3, metalness: 0.2 }),
+  );
+  scene.add(sphere);
+
+  const sat = new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.22, 1),
+    new THREE.MeshStandardMaterial({ color: 0xf472b6, flatShading: true }),
+  );
+  scene.add(sat);
+
+  addEventListener('resize', () => {
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+
+  (function animate(t) {
+    requestAnimationFrame(animate);
+    const s = t * 0.001;
+    ring.rotation.x = s * 0.4;
+    ring.rotation.y = s * 0.3;
+    sat.position.set(Math.cos(s * 0.8) * 1.9, Math.sin(s * 0.8) * 1.9, Math.sin(s * 0.5) * 0.4);
+    sphere.position.y = Math.sin(s) * 0.25;
+    controls.update();
+    renderer.render(scene, camera);
+  })(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Motion Button — lifecycle demo</title>
+<style>
+  :root { --bg:#0f172a; --paper:#f8fafc; --accent:#2563eb; --ok:#16a34a; --err:#dc2626; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--paper); font-family:Inter, system-ui, sans-serif; }
+  main { width:min(480px, 92vw); text-align:center; }
+  h1 { font-size:1.4rem; }
+  p.muted { color:#94a3b8; font-size:0.9rem; }
+  .stage { margin:2.5rem 0; display:flex; justify-content:center; }
+  button.action {
+    appearance:none; border:0; border-radius:9999px; padding:0.9rem 2.2rem; font-weight:700; font-size:1rem;
+    background:var(--accent); color:#fff; cursor:pointer; min-width:200px; position:relative; overflow:hidden;
+    transition:transform .2s cubic-bezier(.2,.8,.2,1), background .2s;
+  }
+  button.action:hover:not(:disabled) { transform:translateY(-2px); }
+  button.action:active:not(:disabled) { transform:translateY(0) scale(.97); }
+  button.action:disabled { cursor:progress; opacity:.8; }
+  button.action.spinning { background:var(--accent); }
+  button.action.spinning::after {
+    content:""; position:absolute; inset:auto 30%; top:42%; height:16%; border-radius:4px;
+    background:#fff; animation:thumb .8s ease-in-out infinite alternate;
+  }
+  @keyframes thumb { from { transform:translateX(-14px); opacity:.4; } to { transform:translateX(14px); opacity:1; } }
+  button.action.ok { background:var(--ok); }
+  button.action.err { background:var(--err); animation:shake .4s; }
+  @keyframes shake { 25%{transform:translateX(-6px);} 50%{transform:translateX(6px);} 75%{transform:translateX(-3px);} }
+  .muted2 { font-size:0.8rem; color:#64748b; }
+  .triggers { display:flex; gap:0.7rem; justify-content:center; flex-wrap:wrap; margin-top:1.6rem; }
+  .triggers button { border:1px solid #334155; background:transparent; color:var(--paper); padding:0.5rem 1rem; border-radius:8px; cursor:pointer; }
+  .triggers button:hover { border-color:var(--accent); }
+  .note { margin-top:2rem; font-size:0.78rem; color:#64748b; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Motion Button — full lifecycle</h1>
+  <p class="muted">Idle → Busy → Success / Error, each with intentional motion. Not a decorated button — a button that communicates state.</p>
+
+  <div class="stage">
+    <button id="btn" class="action" type="button">Deploy</button>
+  </div>
+
+  <div class="triggers">
+    <button id="force-success" type="button">Force success</button>
+    <button id="force-error" type="button">Force error</button>
+    <button id="force-busy" type="button">Force busy (2s)</button>
+    <button id="reset" type="button">Reset to idle</button>
+  </div>
+
+  <p id="status" class="muted2" role="status" aria-live="polite"></p>
+  <p class="note">Deliverable for CUSTOM-MRIGS9RF · each state is a distinct visual + label + ARIA live region.</p>
+</main>
+
+<script>
+  const btn = document.getElementById('btn');
+  const status = document.getElementById('status');
+  let seq = 0;
+
+  function setState(state, label) {
+    btn.disabled = state === 'running';
+    btn.className = 'action' + (state === 'running' ? ' spinning' : state === 'ok' ? ' ok' : state === 'err' ? ' err' : '');
+    const labels = { idle: 'Deploy', running: 'Deploying…', ok: 'Deployed ✓', err: 'Deploy failed ✗' };
+    btn.textContent = labels[label];
+    status.textContent = label === 'ok' ? `#${seq} Success — site is live.`
+      : label === 'err' ? `#${seq} Error — rollback performed (simulated).`
+      : label === 'running' ? `#${seq} Running…` : 'Idle — pick a trigger.';
+  }
+
+  function run(to) {
+    seq += 1;
+    setState('running');
+    setTimeout(() => setState(to), 1200);
+  }
+
+  document.getElementById('force-success').onclick = () => run('ok');
+  document.getElementById('force-error').onclick = () => run('err');
+  document.getElementById('force-busy').onclick = () => { setState('running'); setTimeout(() => setState('idle'), 2000); };
+  document.getElementById('reset').onclick = () => setState('idle');
+  btn.onclick = () => run(Math.random() < 0.8 ? 'ok' : 'err');
+
+  setState('idle');
+</script>
+</body>
+</html>
