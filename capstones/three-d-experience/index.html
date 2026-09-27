@@ -23,10 +23,11 @@
      deferred here; the module itself is a single small file to keep the bundle sane.</p>
 </div>
 <canvas id="app"></canvas>
-<div id="fallback" class="fallback" hidden>WebGL is unavailable in this browser.</div>
+<div id="fallback" class="fallback" hidden><div><strong>Orbit</strong>WebGL is unavailable in this browser. The scene needs a hardware-accelerated canvas.</div></div>
 <script type="module">
-  import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
-  import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/OrbitControls.js';
+  try {
+  const THREE = await import('https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js');
+  const { OrbitControls } = await import('https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/OrbitControls.js?module');
 
   const canvas = document.getElementById('app');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -42,26 +43,26 @@
   controls.autoRotate = true;
   controls.autoRotateSpeed = 1.5;
 
-  scene.add(new THREE.HemisphereLight(0x6699ff, 0x102030, 1.1));
-  const dir = new THREE.DirectionalLight(0xffffff, 1.6);
+  scene.add(new THREE.HemisphereLight(0x9ac9ad, 0x101b19, 1.1));
+  const dir = new THREE.DirectionalLight(0xfff4d8, 1.6);
   dir.position.set(5, 8, 4);
   scene.add(dir);
 
   const ring = new THREE.Mesh(
     new THREE.TorusGeometry(1.6, 0.03, 16, 128),
-    new THREE.MeshStandardMaterial({ color: 0x2563eb, metalness: 0.7, roughness: 0.25 }),
+    new THREE.MeshStandardMaterial({ color: 0xd7ae65, metalness: 0.7, roughness: 0.25 }),
   );
   scene.add(ring);
 
   const sphere = new THREE.Mesh(
     new THREE.SphereGeometry(0.55, 64, 64),
-    new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0b3350, roughness: 0.3, metalness: 0.2 }),
+    new THREE.MeshStandardMaterial({ color: 0x9ac9ad, emissive: 0x16362d, roughness: 0.3, metalness: 0.2 }),
   );
   scene.add(sphere);
 
   const sat = new THREE.Mesh(
     new THREE.IcosahedronGeometry(0.22, 1),
-    new THREE.MeshStandardMaterial({ color: 0xf472b6, flatShading: true }),
+    new THREE.MeshStandardMaterial({ color: 0xd26a5d, flatShading: true }),
   );
   scene.add(sat);
 
@@ -81,6 +82,11 @@
     controls.update();
     renderer.render(scene, camera);
   })(0);
+  } catch (error) {
+    document.getElementById('fallback').hidden = false;
+    document.getElementById('app').hidden = true;
+    console.error('Orbit scene unavailable', error);
+  }
 </script>
 </body>
 </html>
