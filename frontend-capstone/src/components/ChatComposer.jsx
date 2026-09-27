@@ -12,38 +12,38 @@ export default function ChatComposer({ onSend, onRunTool, isBusy }) {
   }
 
   return (
-    <form onSubmit={submit} aria-label="Compose message" className="flex flex-col gap-2">
+    <form onSubmit={submit} aria-label="Compose message" className="composer-shell flex flex-col gap-3 rounded-3xl border border-ink/10 bg-paper-elev p-3 sm:p-4">
       <label htmlFor="composer" className="sr-only">
         Message the assistant
       </label>
-      <div className="flex items-end gap-2">
+      <div className="flex items-end gap-3">
         <textarea
           id="composer"
           rows={2}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           placeholder="Ask the assistant…"
-          className="flex-1 resize-none rounded-control border border-ink/20 bg-paper-elev px-3 py-2 text-sm focus:border-accent focus:outline-none"
+          className="composer-input min-h-14 flex-1 resize-none rounded-2xl border border-ink/15 bg-paper px-4 py-3 text-sm focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
         />
         <button
           type="submit"
           disabled={isBusy || !value.trim()}
-          className="rounded-control bg-accent px-4 py-2 text-sm font-medium text-accent-fg transition-opacity disabled:opacity-50"
+          className="send-button rounded-2xl bg-accent px-4 py-3 text-sm font-semibold text-accent-fg transition-opacity disabled:opacity-50"
         >
           Send
         </button>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <button
           type="button"
           onClick={onRunTool}
           disabled={isBusy}
-          className="self-start rounded-chip border border-ink/20 bg-paper-elev px-3 py-1 text-xs font-medium disabled:opacity-50"
+          className="tool-button self-start rounded-full border border-ink/15 bg-paper px-3 py-1.5 text-xs font-medium disabled:opacity-50"
         >
           Run “check dates” tool
         </button>
         <span className="text-xs text-ink-mute">
-          The model asks before a tool runs; every failure is designed, not a crash.
+          Enter to send · tool runs always ask first
         </span>
       </div>
     </form>

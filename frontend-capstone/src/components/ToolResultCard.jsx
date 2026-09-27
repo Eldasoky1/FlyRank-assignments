@@ -6,25 +6,26 @@ export default function ToolResultCard({ activeTool, onConfirm, onCancel }) {
     <div
       role="status"
       data-tool-state={state}
-      className="rounded-control border border-accent/30 bg-accent-soft p-3"
+      className="tool-card rounded-3xl border border-accent/25 bg-accent-soft p-4 sm:p-5"
     >
       <div className="flex items-center justify-between gap-2">
-        <p className="text-sm font-medium">
-          <span aria-hidden="true">🔧</span> {name}
-        </p>
-        <span className="rounded-chip bg-paper-elev px-2 py-0.5 text-xs font-mono uppercase">
+        <div>
+          <p className="eyebrow text-accent">Tool request</p>
+          <p className="mt-1 text-sm font-semibold"><span aria-hidden="true">◆</span> {name}</p>
+        </div>
+        <span className="rounded-full bg-paper-elev px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em]">
           {state}
         </span>
       </div>
 
       {state === 'running' && (
-        <p className="mt-1 text-sm text-ink-mute">Running with input: “{input}”…</p>
+        <p className="mt-3 text-sm text-ink-mute">Checking the latest dates for <strong className="font-medium text-ink">“{input}”</strong>…</p>
       )}
 
       {state === 'needs_input' && (
         <div className="mt-2 flex flex-col gap-2">
-          <p className="text-sm text-ink-mute">
-            The model wants to run <code className="font-mono">{name}</code> with input “{input}”.
+          <p className="text-sm leading-6 text-ink-mute">
+            StreamChat wants to run <code className="font-mono text-ink">{name}</code> with input “{input}”. Nothing happens until you approve it.
           </p>
           <div className="flex gap-2">
             <button

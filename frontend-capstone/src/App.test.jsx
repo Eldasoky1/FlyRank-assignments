@@ -6,5 +6,6 @@ describe('App layout + health tab', () => {
     render(<App />)
     expect(screen.getByRole('heading', { name: /StreamChat/ })).toBeInTheDocument()
     expect(screen.getByLabelText('Message the assistant')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /A calm place to think/ })).toBeInTheDocument()
   })
 })

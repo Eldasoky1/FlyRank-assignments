@@ -12,17 +12,28 @@ export default function MessageList({ messages, parts, isStreaming }) {
 
   if (messages.length === 0 && !parts.stream) {
     return (
-      <div className="rounded-control border border-ink/10 bg-paper-elev px-4 py-10 text-center">
-        <p className="font-medium">No conversations yet — try asking about the capstone plan</p>
-        <p className="mt-1 text-sm text-ink-mute">
-          The assistant streams its answer in real time and can confirm before running a tool.
-        </p>
+      <div className="empty-state rounded-3xl border border-ink/10 bg-paper-elev px-5 py-10 sm:px-10 sm:py-14">
+        <div className="empty-orbit" aria-hidden="true"><span>↗</span></div>
+        <div className="max-w-lg">
+          <p className="eyebrow">Start with a question</p>
+          <h3 className="display-title mt-2 text-2xl font-semibold sm:text-3xl">Make the next thought easier.</h3>
+          <p className="mt-3 max-w-md text-sm leading-6 text-ink-mute">
+            Ask for a plan, a critique, or a quick date check. Your assistant will stream the answer and ask before taking action.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-2 text-xs text-ink-mute">
+            <span className="suggestion-chip">“Outline my next step”</span>
+            <span className="suggestion-chip">“Check my dates”</span>
+          </div>
+          <p className="sr-only">
+            No conversations yet. try asking about the capstone plan.
+          </p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col gap-3" role="log" aria-live="polite">
+    <div className="message-canvas flex flex-col gap-3 rounded-3xl border border-ink/10 bg-paper-elev p-4 sm:p-6" role="log" aria-live="polite">
       {messages.map((m) => (
         <MessageBubble key={m.id} message={m} />
       ))}

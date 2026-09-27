@@ -5,13 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Orbit — First 3D experience on the web</title>
 <style>
-  html,body{margin:0;height:100%;overflow:hidden;background:#0b1020;color:#e2e8f0;
-    font-family:Inter,system-ui,sans-serif;}
+  html,body{margin:0;height:100%;overflow:hidden;background:#101b19;color:#f4f0e5;
+    font-family:"Trebuchet MS", Verdana, sans-serif;}
   #app{width:100vw;height:100vh;display:block;}
-  .ui{position:fixed;left:20px;bottom:20px;z-index:5;max-width:min(520px,90vw);}
-  .ui h1{font-size:1.2rem;margin:0;letter-spacing:0.02em;}
-  .ui p{font-size:0.85rem;color:#94a3b8;line-height:1.5;margin:0.4rem 0 0;}
-  .fallback{position:fixed;inset:0;display:grid;place-items:center;color:#94a3b8;text-align:center;padding:1rem;}
+  .ui{position:fixed;left:20px;bottom:20px;z-index:5;max-width:min(520px,90vw);padding:18px 20px;border-left:3px solid #d1a45d;background:rgba(16,27,25,.66);backdrop-filter:blur(10px);}
+  .ui h1{font:700 1.7rem Georgia,serif;margin:0;letter-spacing:-.04em;}
+  .ui p{font-size:0.85rem;color:#c5d1c7;line-height:1.6;margin:0.5rem 0 0;}
+  .ui::after{content:'drag · scroll · auto-orbit';display:block;margin-top:12px;color:#d1a45d;font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .fallback{position:fixed;inset:0;display:grid;place-items:center;color:#c5d1c7;text-align:center;padding:1rem;background:#16362d;}
+  .fallback strong{display:block;color:#f4f0e5;font:700 2rem Georgia,serif;margin-bottom:8px}
 </style>
 </head>
 <body>

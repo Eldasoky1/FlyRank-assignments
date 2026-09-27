@@ -5,16 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Motion Button — lifecycle demo</title>
 <style>
-  :root { --bg:#0f172a; --paper:#f8fafc; --accent:#2563eb; --ok:#16a34a; --err:#dc2626; }
+  :root { --bg:#182521; --paper:#fffaf0; --panel:#22342e; --muted:#a6b6ac; --accent:#d1a45d; --ok:#6db985; --err:#d26a5d; }
   * { box-sizing:border-box; }
-  body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--paper); font-family:Inter, system-ui, sans-serif; }
-  main { width:min(480px, 92vw); text-align:center; }
-  h1 { font-size:1.4rem; }
-  p.muted { color:#94a3b8; font-size:0.9rem; }
-  .stage { margin:2.5rem 0; display:flex; justify-content:center; }
+  body { margin:0; min-height:100vh; display:grid; place-items:center; background:radial-gradient(circle at 50% 16%,#2d4a3e 0,transparent 35%),var(--bg); color:var(--paper); font-family:"Trebuchet MS", Verdana, sans-serif; }
+  main { width:min(640px, 92vw); padding:32px 0; }
+  h1 { font:700 clamp(2rem,6vw,3.6rem)/.95 Georgia,serif; letter-spacing:-.05em; margin:0; }
+  p.muted { color:var(--muted); font-size:0.95rem; line-height:1.65; max-width:46ch; }
+  .eyebrow{color:var(--accent);font-size:.68rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .stage { margin:2.5rem 0; min-height:220px; display:grid; place-items:center; border:1px solid rgba(255,250,240,.1); background:rgba(255,250,240,.04); border-radius:28px; box-shadow:inset 0 1px rgba(255,250,240,.08); }
   button.action {
     appearance:none; border:0; border-radius:9999px; padding:0.9rem 2.2rem; font-weight:700; font-size:1rem;
-    background:var(--accent); color:#fff; cursor:pointer; min-width:200px; position:relative; overflow:hidden;
+    background:var(--accent); color:var(--bg); cursor:pointer; min-width:220px; position:relative; overflow:hidden; box-shadow:0 10px 28px rgba(209,164,93,.22);
     transition:transform .2s cubic-bezier(.2,.8,.2,1), background .2s;
   }
   button.action:hover:not(:disabled) { transform:translateY(-2px); }
@@ -29,16 +30,19 @@
   button.action.ok { background:var(--ok); }
   button.action.err { background:var(--err); animation:shake .4s; }
   @keyframes shake { 25%{transform:translateX(-6px);} 50%{transform:translateX(6px);} 75%{transform:translateX(-3px);} }
-  .muted2 { font-size:0.8rem; color:#64748b; }
+  .muted2 { font-size:0.82rem; color:var(--muted); min-height:1.2em; }
   .triggers { display:flex; gap:0.7rem; justify-content:center; flex-wrap:wrap; margin-top:1.6rem; }
-  .triggers button { border:1px solid #334155; background:transparent; color:var(--paper); padding:0.5rem 1rem; border-radius:8px; cursor:pointer; }
+  .triggers button { border:1px solid rgba(255,250,240,.18); background:rgba(255,250,240,.04); color:var(--paper); padding:0.65rem 1rem; border-radius:10px; cursor:pointer; transition:background .2s,border .2s,transform .2s; }
+  .triggers button:active{transform:translateY(1px)}
   .triggers button:hover { border-color:var(--accent); }
-  .note { margin-top:2rem; font-size:0.78rem; color:#64748b; }
+  .note { margin-top:2rem; font-size:0.78rem; color:#7f9588; }
+  @media (prefers-reduced-motion:reduce){button.action,button.action.err{animation:none;transition:none}.triggers button{transition:none}}
 </style>
 </head>
 <body>
 <main>
-  <h1>Motion Button — full lifecycle</h1>
+  <p class="eyebrow">Interaction study · state as feedback</p>
+  <h1>Motion Button</h1>
   <p class="muted">Idle → Busy → Success / Error, each with intentional motion. Not a decorated button — a button that communicates state.</p>
 
   <div class="stage">
@@ -61,14 +65,14 @@
   const status = document.getElementById('status');
   let seq = 0;
 
-  function setState(state, label) {
+  function setState(state) {
     btn.disabled = state === 'running';
     btn.className = 'action' + (state === 'running' ? ' spinning' : state === 'ok' ? ' ok' : state === 'err' ? ' err' : '');
     const labels = { idle: 'Deploy', running: 'Deploying…', ok: 'Deployed ✓', err: 'Deploy failed ✗' };
-    btn.textContent = labels[label];
-    status.textContent = label === 'ok' ? `#${seq} Success — site is live.`
-      : label === 'err' ? `#${seq} Error — rollback performed (simulated).`
-      : label === 'running' ? `#${seq} Running…` : 'Idle — pick a trigger.';
+    btn.textContent = labels[state];
+    status.textContent = state === 'ok' ? `#${seq} Success — site is live.`
+      : state === 'err' ? `#${seq} Error — rollback performed (simulated).`
+      : state === 'running' ? `#${seq} Running…` : 'Idle — pick a trigger.';
   }
 
   function run(to) {

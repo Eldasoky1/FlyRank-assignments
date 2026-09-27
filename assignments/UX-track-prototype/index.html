@@ -7,50 +7,55 @@
 <style>
   /* UX-05: semantic tokens as CSS variables (applied via var(), never hard-coded hex in components) */
   :root{
-    --color-bg:#fbfcfe; --color-surface:#ffffff; --color-surface-2:#f1f5f9;
-    --color-text:#0f172a; --color-text-mute:#64748b;
-    --color-primary:#2563eb; --color-primary-soft:#eff6ff; --color-primary-fg:#ffffff;
-    --color-danger:#dc2626; --color-danger-soft:#fef2f2; --color-danger-fg:#ffffff;
-    --color-ok:#16a34a; --color-ok-soft:#f0fdf4; --color-ok-fg:#ffffff;
-    --color-warn:#d97706; --color-warn-soft:#fffbeb; --color-warn-fg:#ffffff;
+    --color-bg:#e9e5dc; --color-surface:#fffdf8; --color-surface-2:#f1eee7;
+    --color-text:#24322f; --color-text-mute:#6e7c75;
+    --color-primary:#1f7566; --color-primary-soft:#e5f0ea; --color-primary-fg:#fffdf8;
+    --color-danger:#b84b42; --color-danger-soft:#f9e9e5; --color-danger-fg:#fffdf8;
+    --color-ok:#397b57; --color-ok-soft:#e5f1e7; --color-ok-fg:#fffdf8;
+    --color-warn:#a76a24; --color-warn-soft:#f8efdc; --color-warn-fg:#fffdf8;
     --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-6:24px;
-    --radius-1:6px; --radius-2:10px; --radius-pill:999px;
-    --font-sans:Inter, system-ui, sans-serif; --font-mono:ui-monospace, monospace;
-    --shadow-1:0 1px 3px rgba(15,23,42,.08);
+    --radius-1:6px; --radius-2:14px; --radius-pill:999px;
+    --font-sans:"Trebuchet MS", Verdana, sans-serif; --font-display:Georgia, "Times New Roman", serif; --font-mono:ui-monospace, monospace;
+    --shadow-1:0 12px 32px rgba(44,52,45,.12);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans)}
-  .app{max-width:420px;margin:0 auto;min-height:100vh;background:var(--color-surface);
-    box-shadow:var(--shadow-1);display:flex;flex-direction:column}
-  .topbar{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4);border-bottom:1px solid var(--color-surface-2)}
-  .brand{font-weight:700}
-  .tabs{display:flex;padding:var(--space-2) var(--space-4);gap:var(--space-2);border-bottom:1px solid var(--color-surface-2)}
+  body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-sans);background-image:linear-gradient(rgba(36,50,47,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(36,50,47,.035) 1px,transparent 1px);background-size:32px 32px}
+  .app{max-width:520px;margin:0 auto;min-height:100vh;background:var(--color-surface);box-shadow:var(--shadow-1);display:flex;flex-direction:column}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:20px var(--space-4) 14px;border-bottom:1px solid var(--color-surface-2)}
+  .brand{font-family:var(--font-display);font-size:1.45rem;font-weight:700;letter-spacing:-.04em}
+  .tabs{display:flex;padding:var(--space-2) var(--space-4);gap:var(--space-2);border-bottom:1px solid var(--color-surface-2);background:#fbf8f1}
   .tab{flex:1;padding:var(--space-2);border:none;background:transparent;border-radius:var(--radius-2);font-weight:600;cursor:pointer;color:var(--color-text-mute)}
-  .tab[aria-selected=true]{background:var(--color-primary-soft);color:var(--color-primary)}
-  main{padding:var(--space-4);display:flex;flex-direction:column;gap:var(--space-4);flex:1}
-  h1{font-size:1.25rem;margin:0}
-  .card{background:var(--color-surface-2);border-radius:var(--radius-2);padding:var(--space-4)}
-  .btn{display:inline-flex;align-items:center;gap:var(--space-2);border:none;border-radius:var(--radius-2);padding:var(--space-3) var(--space-4);font-weight:600;cursor:pointer}
+  .tab[aria-selected=true]{background:var(--color-primary);color:var(--color-primary-fg);box-shadow:0 3px 10px rgba(31,117,102,.2)}
+  main{padding:24px var(--space-4) 40px;display:flex;flex-direction:column;gap:var(--space-4);flex:1}
+  h1{font-family:var(--font-display);font-size:2.15rem;letter-spacing:-.04em;line-height:1.05;margin:0}
+  .card{background:var(--color-surface-2);border:1px solid rgba(36,50,47,.08);border-radius:18px;padding:var(--space-4);box-shadow:0 6px 18px rgba(44,52,45,.05)}
+  .btn{display:inline-flex;align-items:center;gap:var(--space-2);border:0;border-radius:var(--radius-2);padding:var(--space-3) var(--space-4);font-weight:600;cursor:pointer;transition:transform .2s,background .2s,box-shadow .2s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(1px) scale(.99)}
   .btn-primary{background:var(--color-primary);color:var(--color-primary-fg)}
   .btn-secondary{background:var(--color-surface-2);color:var(--color-text)}
   .field{display:flex;flex-direction:column;gap:var(--space-1);margin-bottom:var(--space-3)}
   .field label{font-size:.85rem;font-weight:600;color:var(--color-text-mute)}
-  input,select{font:inherit;padding:var(--space-3);border:1px solid var(--color-surface-2);border-radius:var(--radius-2)}
+  input,select{font:inherit;padding:var(--space-3);border:1px solid rgba(36,50,47,.16);border-radius:var(--radius-2);background:var(--color-surface);color:var(--color-text)}
+  input:focus-visible,select:focus-visible,button:focus-visible{outline:3px solid rgba(31,117,102,.25);outline-offset:2px}
   .chip{display:inline-block;padding:var(--space-1) var(--space-2);border-radius:var(--radius-pill);font-size:.75rem;font-weight:600}
   .chip-ok{background:var(--color-ok-soft);color:var(--color-ok)}
   .muted{color:var(--color-text-mute);font-size:.85rem}
   .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
   [hidden]{display:none!important}
   /* UX-07: AI surface — pattern chips + governor + trust builder + designed failure/uncertainty */
-  .chat{display:flex;flex-direction:column;gap:var(--space-3)}
+  .chat{display:flex;flex-direction:column;gap:var(--space-3);padding:18px 0}
   .bubble{max-width:82%;padding:var(--space-3);border-radius:var(--radius-2);font-size:.9rem;}
   .bubble.user{align-self:flex-end;background:var(--color-primary);color:var(--color-primary-fg)}
-  .bubble.assistant{align-self:flex-start;background:var(--color-surface-2)}
+  .bubble.assistant{align-self:flex-start;background:var(--color-surface-2);border:1px solid rgba(36,50,47,.08)}
   .streaming .cursor{display:inline-block;width:8px;height:1em;background:var(--color-primary);animation:blink 1s steps(2) infinite}
   @keyframes blink{50%{opacity:0}}
   .pattern{display:flex;gap:var(--space-2);flex-wrap:wrap}
   .pattern span{font-size:.7rem;padding:var(--space-1) var(--space-2);border:1px solid var(--color-surface-2);border-radius:var(--radius-pill)}
   .state-demo{display:grid;gap:var(--space-3)}
+  section{animation:show-section .24s ease-out}
+  @keyframes show-section{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){section{animation:none}}
 </style>
 </head>
 <body>
