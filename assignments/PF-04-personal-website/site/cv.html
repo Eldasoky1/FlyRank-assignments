@@ -92,6 +92,17 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
+<style>
+  :root { --bg:#101b19; --bg-2:#152622; --panel:rgba(27,49,43,.9); --panel-2:rgba(34,58,50,.86); --line:rgba(215,174,101,.24); --line-2:rgba(255,250,240,.12); --accent:#d7ae65; --accent-2:#9ac9ad; --accent-3:#d7ae65; --text:#fffaf0; --muted:#b4c2b8; }
+  body { font-family:"Trebuchet MS", Verdana, sans-serif; background:#101b19; }
+  .bg { background:radial-gradient(900px 520px at 90% -10%,rgba(215,174,101,.16),transparent 62%),linear-gradient(180deg,var(--bg),var(--bg-2)); }
+  .blob { display:none; }
+  h1 { font-family:Georgia,"Times New Roman",serif; background:linear-gradient(90deg,var(--accent),var(--text) 55%,var(--accent-2)); background-size:100% 100%; animation:none; letter-spacing:-.06em; }
+  .back:hover,.home:hover,.contact a:hover { color:var(--accent); }
+  .entry:hover,.sbox:hover,.ach:hover { border-color:var(--line); }
+  :focus-visible { outline:3px solid rgba(215,174,101,.65); outline-offset:3px; }
+  @media print { h1 { color:#111; background:none; -webkit-text-fill-color:initial; } }
+</style>
 </head>
 <body>
 <div class="bg" aria-hidden="true"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
