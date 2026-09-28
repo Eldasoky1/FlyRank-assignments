@@ -1,46 +1,123 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>aurora — fragment shader hero</title>
-<style>
-  html,body{margin:0;height:100%;overflow:hidden;background:#071412;color:#f5f1e5;
-    font-family:"Trebuchet MS", Verdana, sans-serif;}
-  #gl{position:fixed;inset:0;width:100%;height:100%;display:block;}
-  .hero{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none;padding:2rem;}
-  .hero h1{font:700 clamp(3.5rem,14vw,10rem)/.8 Georgia,serif;margin:0;letter-spacing:-.08em;color:#fff9e9;text-shadow:0 2px 24px rgba(2,6,23,.6);}
-  .hero p{font-size:clamp(.9rem,2.4vw,1.25rem);color:#d8e2d8;margin:1.1rem auto 0;max-width:34ch;line-height:1.55;}
-  .badge{pointer-events:none;position:absolute;bottom:18px;right:18px;font-size:.72rem;color:#d8e2d8;background:rgba(7,20,18,.65);padding:8px 11px;border:1px solid rgba(255,255,255,.16);border-radius:999px;}
-  .no-webgl{position:fixed;inset:0;display:grid;place-items:center;text-align:center;background:#16362d;color:#f5f1e5;padding:2rem;}
-  .no-webgl h1{font:700 3rem Georgia,serif}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>aurora — fragment shader hero</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #071412;
+      color: #f5f1e5;
+      font-family: "Trebuchet MS", Verdana, sans-serif;
+    }
+
+    #gl {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .hero {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      pointer-events: none;
+      padding: 2rem;
+    }
+
+    .hero h1 {
+      font: 700 clamp(3.5rem, 14vw, 10rem)/.8 Georgia, serif;
+      margin: 0;
+      letter-spacing: -.08em;
+      color: #fff9e9;
+      text-shadow: 0 2px 24px rgba(2, 6, 23, .6);
+    }
+
+    .hero p {
+      font-size: clamp(.9rem, 2.4vw, 1.25rem);
+      color: #d8e2d8;
+      margin: 1.1rem auto 0;
+      max-width: 34ch;
+      line-height: 1.55;
+    }
+
+    .badge {
+      pointer-events: none;
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      font-size: .72rem;
+      color: #d8e2d8;
+      background: rgba(7, 20, 18, .65);
+      padding: 8px 11px;
+      border: 1px solid rgba(255, 255, 255, .16);
+      border-radius: 999px;
+    }
+
+    .no-webgl {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: #16362d;
+      color: #f5f1e5;
+      padding: 2rem;
+    }
+
+    .no-webgl h1 {
+      font: 700 3rem Georgia, serif
+    }
+
+    .hero h1,
+    .hero p { text-wrap: balance; }
+    canvas { touch-action: none; }
+    @media (max-width: 560px) {
+      .hero { padding: 1.25rem; }
+      .hero h1 { font-size: clamp(3.2rem, 18vw, 5.5rem); }
+      .badge { right: 12px; bottom: 12px; max-width: calc(100vw - 24px); font-size: .64rem; }
+    }
+  </style>
 </head>
+
 <body>
-<canvas id="gl"></canvas>
-<div class="badge">fragment shader · uv/time/mouse · WebGL1</div>
-<div class="hero">
-  <h1>Aurora</h1>
-  <p>A gradient aurora that leans toward your cursor, with a grain pass on top. Reduced-motion users get the same palette as a static gradient.</p>
-</div>
-<div id="no-webgl" class="no-webgl" hidden>
-  <div><h1>Aurora</h1><p>Your browser can't run WebGL, so here's a reduced-motion palette fallback.</p></div>
-</div>
-<script>
-  const canvas = document.getElementById('gl');
-  const gl = canvas.getContext('webgl', { antialias: false });
+  <canvas id="gl" role="img" aria-label="Animated forest and brass aurora shader"></canvas>
+  <div class="badge">fragment shader · uv/time/mouse · WebGL1</div>
+  <div class="hero">
+    <h1>Aurora</h1>
+    <p>A gradient aurora that leans toward your cursor, with a grain pass on top. Reduced-motion users get the same
+      palette as a static gradient.</p>
+  </div>
+  <div id="no-webgl" class="no-webgl" hidden>
+    <div>
+      <h1>Aurora</h1>
+      <p>Your browser can't run WebGL, so here's a reduced-motion palette fallback.</p>
+    </div>
+  </div>
+  <script>
+    const canvas = document.getElementById('gl');
+    const gl = canvas.getContext('webgl', { antialias: false });
 
-  if (!gl) {
-    document.getElementById('no-webgl').hidden = false;
-  } else {
-    const mouse = { x: 0.5, y: 0.5 };
-    addEventListener('pointermove', (e) => {
-      mouse.x = e.clientX / innerWidth;
-      mouse.y = 1 - e.clientY / innerHeight;
-    });
+    if (!gl) {
+      document.getElementById('no-webgl').hidden = false;
+    } else {
+      const mouse = { x: 0.5, y: 0.5 };
+      addEventListener('pointermove', (e) => {
+        mouse.x = e.clientX / innerWidth;
+        mouse.y = 1 - e.clientY / innerHeight;
+      });
 
-    const vert = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`;
-    const frag = `
+      const vert = `attribute vec2 p; void main(){ gl_Position = vec4(p, 0.0, 1.0); }`;
+      const frag = `
       precision highp float;
       uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse;
       float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
@@ -70,40 +147,41 @@
         col += g * 0.06;
         gl_FragColor = vec4(col, 1.0);
       }`;
-    function compile(type, src){
-      const sh = gl.createShader(type);
-      gl.shaderSource(sh, src); gl.compileShader(sh);
-      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(sh));
-      return sh;
+      function compile(type, src) {
+        const sh = gl.createShader(type);
+        gl.shaderSource(sh, src); gl.compileShader(sh);
+        if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(sh));
+        return sh;
+      }
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, vert));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, frag));
+      gl.linkProgram(prog); gl.useProgram(prog);
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+      const uRes = gl.getUniformLocation(prog, 'u_res');
+      const uTime = gl.getUniformLocation(prog, 'u_time');
+      const uMouse = gl.getUniformLocation(prog, 'u_mouse');
+
+      function resize() { canvas.width = innerWidth * devicePixelRatio; canvas.height = innerHeight * devicePixelRatio; gl.viewport(0, 0, canvas.width, canvas.height); }
+      resize(); addEventListener('resize', resize);
+
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let start = performance.now();
+      (function loop(now) {
+        requestAnimationFrame(loop);
+        if (!reduced) { gl.uniform1f(uTime, (now - start) / 1000); }
+        gl.uniform2f(uRes, canvas.width, canvas.height);
+        gl.uniform2f(uMouse, mouse.x, mouse.y);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      })(start);
     }
-    const prog = gl.createProgram();
-    gl.attachShader(prog, compile(gl.VERTEX_SHADER, vert));
-    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, frag));
-    gl.linkProgram(prog); gl.useProgram(prog);
-
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
-    const loc = gl.getAttribLocation(prog, 'p');
-    gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-
-    const uRes = gl.getUniformLocation(prog, 'u_res');
-    const uTime = gl.getUniformLocation(prog, 'u_time');
-    const uMouse = gl.getUniformLocation(prog, 'u_mouse');
-
-    function resize(){ canvas.width = innerWidth * devicePixelRatio; canvas.height = innerHeight * devicePixelRatio; gl.viewport(0,0,canvas.width,canvas.height); }
-    resize(); addEventListener('resize', resize);
-
-    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let start = performance.now();
-    (function loop(now){
-      requestAnimationFrame(loop);
-      if (!reduced) { gl.uniform1f(uTime, (now-start)/1000); }
-      gl.uniform2f(uRes, canvas.width, canvas.height);
-      gl.uniform2f(uMouse, mouse.x, mouse.y);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-    })(start);
-  }
-</script>
+  </script>
 </body>
+
 </html>
