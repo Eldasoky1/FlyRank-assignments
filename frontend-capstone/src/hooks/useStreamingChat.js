@@ -1,11 +1,15 @@
 import { useCallback, useRef, useState } from 'react'
 
 const SABOTAGES = ['net-down', 'mid-stream', 'http-429', 'bad-json']
+const DEMO = String(import.meta.env?.VITE_DEMO) === '1'
 
 function nextSabotage() {
   const list = window.__SABOTAGE ?? []
   return list.length ? list[0] : null
 }
+
+const DEMO_REPLY =
+  "Here's the streamed answer in demo mode. The tool flow (confirm before save), designed empty/error/loading states, and the confirmation governor all work without a backend — the stream is simulated locally so the UI can be reviewed here."
 
 let idCounter = 0
 
@@ -32,6 +36,21 @@ export function useStreamingChat() {
       setStatus('streaming')
       setParts({ stream: '', activeTool: null })
       try {
+        if (DEMO) {
+          const words = DEMO_REPLY.split(' ')
+          const acc = []
+          for (const w of words) {
+            acc.push(w)
+            if (sab === 'mid-stream' && acc.join(' ').length > 12) {
+              throw new Error('Connection lost mid-stream (simulated).')
+            }
+            setParts((p) => ({ ...p, stream: acc.join(' ') + ' ' }))
+            await new Promise((r) => setTimeout(r, 55))
+          }
+          if (sab === 'empty') throw new Error('Empty response (simulated).')
+          finish(acc.join(' '))
+          return
+        }
         const res = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

@@ -4,6 +4,10 @@ export default function HealthCheck() {
   const [state, setState] = useState({ status: 'loading' })
 
   useEffect(() => {
+    if (String(import.meta.env?.VITE_DEMO) === '1') {
+      setState({ status: 'ok', body: { status: 'ok', service: 'frontend-capstone-demo', ts: Date.now() } })
+      return
+    }
     let alive = true
     fetch('/api/health')
       .then(async (r) => {

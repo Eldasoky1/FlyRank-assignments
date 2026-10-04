@@ -1,86 +1,34 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orbit — First 3D experience on the web</title>
   <style>
-    html,
-  <script type="importmap">
-    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
-  </script>
-    body {
+    html, body {
       margin: 0;
-      const THREE = await import('three');
-      const { OrbitControls } = await import('https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/OrbitControls.js');
       background: #101b19;
       color: #f4f0e5;
       font-family: "Trebuchet MS", Verdana, sans-serif;
+      height: 100%;
+      overflow: hidden;
     }
-
-    #app {
-      width: 100vw;
-      height: 100vh;
-      display: block;
-    }
-
+    #app { width: 100vw; height: 100vh; display: block; touch-action: none; }
     .ui {
-      position: fixed;
-      left: 20px;
-      bottom: 20px;
-      z-index: 5;
-      max-width: min(520px, 90vw);
-      padding: 18px 20px;
-      border-left: 3px solid #d1a45d;
-      background: rgba(16, 27, 25, .66);
-      backdrop-filter: blur(10px);
+      position: fixed; left: 20px; bottom: 20px; z-index: 5;
+      max-width: min(520px, 90vw); padding: 18px 20px;
+      border-left: 3px solid #d1a45d; background: rgba(16,27,25,.72);
+      backdrop-filter: blur(10px); border-radius: 0 12px 12px 0;
     }
-
-    .ui h1 {
-      font: 700 1.7rem Georgia, serif;
-      margin: 0;
-      letter-spacing: -.04em;
-    }
-
-    .ui p {
-      font-size: 0.85rem;
-      color: #c5d1c7;
-      line-height: 1.6;
-      margin: 0.5rem 0 0;
-    }
-
+    .ui h1 { font: 700 1.7rem Georgia, serif; margin: 0; letter-spacing: -.04em; }
+    .ui p { font-size: .85rem; color: #c5d1c7; line-height: 1.6; margin: .5rem 0 0; }
     .ui::after {
-      content: 'drag · scroll · auto-orbit';
-      display: block;
-      margin-top: 12px;
-      color: #d1a45d;
-      font-size: .65rem;
-      font-weight: 700;
-      letter-spacing: .14em;
-      text-transform: uppercase
-    }
-
-    .fallback {
-      position: fixed;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      color: #c5d1c7;
-      text-align: center;
-      padding: 1rem;
-      background: #16362d;
-    }
-
-    .fallback strong {
-      display: block;
-      color: #f4f0e5;
-      font: 700 2rem Georgia, serif;
-      margin-bottom: 8px
+      content: 'drag · scroll · auto-orbit'; display: block; margin-top: 12px;
+      color: #d1a45d; font-size: .65rem; font-weight: 700; letter-spacing: .14em;
+      text-transform: uppercase;
     }
     canvas { touch-action: none; }
-    .ui h1,
-    .ui p { text-wrap: balance; }
+    .ui h1, .ui p { text-wrap: balance; }
     @media (max-width: 560px) {
       .ui { left: 12px; right: 12px; bottom: 12px; max-width: none; padding: 15px 16px; }
       .ui h1 { font-size: 1.4rem; }
@@ -88,85 +36,151 @@
     }
   </style>
 </head>
-
 <body>
   <div class="ui">
     <h1>Orbit — a tiny 3D scene</h1>
-    <p>Drag to rotate · scroll to zoom · auto-orbits. Lazy-loaded: only loads after you interact is
-      deferred here; the module itself is a single small file to keep the bundle sane.</p>
+    <p>An interactive orbit scene. Uses WebGL when available and falls back to an animated
+       Canvas-2D render so it always works — even without hardware acceleration.</p>
   </div>
   <canvas id="app" role="img" aria-label="Interactive Orbit 3D scene"></canvas>
-  <div id="fallback" class="fallback" hidden>
-    <div><strong>Orbit</strong>WebGL is unavailable in this browser. The scene needs a hardware-accelerated canvas.
-    </div>
-  </div>
   <script type="importmap">
     {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
   </script>
   <script type="module">
-    try {
+    const canvas = document.getElementById('app');
+
+    function webglAvailable() {
+      try {
+        const c = document.createElement('canvas');
+        return !!(c.getContext && (c.getContext('webgl2') || c.getContext('webgl')));
+      } catch (e) { return false; }
+    }
+
+    /* ================= Canvas 2D fallback =================
+       Pure 2D projection of the same scene: a tilted ring, a planet, and an
+       orbiting satellite — animated, draggable, zoomable. No GPU required. */
+    function start2D() {
+      let mx = 0, my = 0, drag = false, rotY = 0, rotVel = 0.004, zoom = 1;
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        canvas.width = innerWidth; canvas.height = innerHeight;
+      }
+      resize(); addEventListener('resize', resize);
+
+      canvas.addEventListener('pointerdown', () => { drag = true; });
+      addEventListener('pointerup', () => { drag = false; });
+      canvas.addEventListener('pointermove', (e) => {
+        mx = (e.clientX - innerWidth / 2) / (innerWidth / 2);
+        my = (e.clientY - innerHeight / 2) / (innerHeight / 2);
+        if (drag) rotVel = (e.movementX) * 0.0006;
+      });
+      canvas.addEventListener('wheel', (e) => { zoom = Math.max(.5, Math.min(2, zoom - e.deltaY * .001)); }, { passive: true });
+
+      function project(x, y, z) {
+        // rotate around Y then perspective-project
+        const cos = Math.cos(rotY), sin = Math.sin(rotY);
+        const x1 = x * cos - z * sin, z1 = x * sin + z * cos;
+        const f = zoom;
+        const px = innerWidth / 2 + x1 * 90 * f;
+        const py = innerHeight / 2 + (y * .9 + my * -12 + z1 * .35) * 90 * f;
+        return [px, py, z1];
+      }
+      function ellipse(cx, cy, rx, rz) {
+        ctx.save();
+        ctx.translate(rx * .55, rz * .3 + cy - cy);
+        ctx.transform(1, 0, 0, 1, 0, 0);
+        ctx.strokeStyle = 'rgba(215,174,101,.7)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, rx, rz, 0, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      let last = performance.now();
+      (function frame(t) {
+        requestAnimationFrame(frame);
+        const dt = Math.min(48, t - last); last = t;
+        if (!drag) rotY += rotVel * dt;
+        const s = t * 0.001;
+        ctx.fillStyle = '#101b19'; ctx.fillRect(0, 0, innerWidth, innerHeight);
+
+        // stars
+        ctx.fillStyle = 'rgba(244,240,229,.5)';
+        for (let i = 0; i < 90; i++) {
+          const px = (i * 37.7) % innerWidth, py = (i * 71.3) % innerHeight;
+          ctx.fillRect(px, py, 1, 1);
+        }
+
+        // tilted ring (ellipse), fixed to scene plane
+        const ringAngle = 0.45;
+        const [rx, ry] = project(1.6, 0, 0), [lx, ly] = project(-1.6, 0, 0);
+        const r = Math.hypot(rx - lx, ry - ly) / 2;
+        const cx = (rx + lx) / 2, cy = (ry + ly) / 2;
+        ctx.strokeStyle = 'rgba(215,174,101,.85)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, r, r * 0.34, rotY * 0.5 + ringAngle, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // planet (at origin)
+        const [px, py, pz] = project(0, Math.sin(s) * 0.25, 0);
+        const rad = 34 * zoom;
+        const g = ctx.createRadialGradient(px - rad*0.3, py - rad*0.3, rad*0.1, px, py, rad);
+        g.addColorStop(0, '#d9efe2'); g.addColorStop(.55, '#7fb49b'); g.addColorStop(1, '#24453a');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(px, py, rad, 0, Math.PI * 2); ctx.fill();
+
+        // orbiting satellite
+        const sa = s * 0.8;
+        const [sx, sy] = project(Math.cos(sa) * 1.9, Math.sin(sa) * 1.9, Math.sin(s * 0.5) * 0.4);
+        ctx.fillStyle = '#d26a5d';
+        ctx.beginPath(); ctx.arc(sx, sy, 11 * zoom, 0, Math.PI * 2); ctx.fill();
+
+        // hint
+        ctx.fillStyle = 'rgba(154,201,173,.6)';
+        ctx.font = '600 11px "Trebuchet MS", sans-serif';
+        ctx.fillText('Canvas-2D fallback (WebGL off)', 16, innerHeight - 14);
+      })(0);
+    }
+
+    /* ================= WebGL path (three.js) ================= */
+    async function startGL() {
       const THREE = await import('three');
       const { OrbitControls } = await import('https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/OrbitControls.js');
-
-      const canvas = document.getElementById('app');
       const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
       renderer.setSize(innerWidth, innerHeight);
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
       camera.position.set(3, 2, 5);
-
       const controls = new OrbitControls(camera, canvas);
-      controls.enableDamping = true;
-      controls.autoRotate = true;
-      controls.autoRotateSpeed = 1.5;
-
+      controls.enableDamping = true; controls.autoRotate = true; controls.autoRotateSpeed = 1.5;
       scene.add(new THREE.HemisphereLight(0x9ac9ad, 0x101b19, 1.1));
-      const dir = new THREE.DirectionalLight(0xfff4d8, 1.6);
-      dir.position.set(5, 8, 4);
-      scene.add(dir);
-
-      const ring = new THREE.Mesh(
-        new THREE.TorusGeometry(1.6, 0.03, 16, 128),
-        new THREE.MeshStandardMaterial({ color: 0xd7ae65, metalness: 0.7, roughness: 0.25 }),
-      );
-      scene.add(ring);
-
-      const sphere = new THREE.Mesh(
-        new THREE.SphereGeometry(0.55, 64, 64),
-        new THREE.MeshStandardMaterial({ color: 0x9ac9ad, emissive: 0x16362d, roughness: 0.3, metalness: 0.2 }),
-      );
-      scene.add(sphere);
-
-      const sat = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(0.22, 1),
-        new THREE.MeshStandardMaterial({ color: 0xd26a5d, flatShading: true }),
-      );
-      scene.add(sat);
-
-      addEventListener('resize', () => {
-        camera.aspect = innerWidth / innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(innerWidth, innerHeight);
-      });
-
+      const dir = new THREE.DirectionalLight(0xfff4d8, 1.6); dir.position.set(5, 8, 4); scene.add(dir);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.03, 16, 128),
+        new THREE.MeshStandardMaterial({ color: 0xd7ae65, metalness: 0.7, roughness: 0.25 })); scene.add(ring);
+      const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.55, 64, 64),
+        new THREE.MeshStandardMaterial({ color: 0x9ac9ad, emissive: 0x16362d, roughness: 0.3, metalness: 0.2 })); scene.add(sphere);
+      const sat = new THREE.Mesh(new THREE.IcosahedronGeometry(0.22, 1),
+        new THREE.MeshStandardMaterial({ color: 0xd26a5d, flatShading: true })); scene.add(sat);
+      addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
       (function animate(t) {
         requestAnimationFrame(animate);
         const s = t * 0.001;
-        ring.rotation.x = s * 0.4;
-        ring.rotation.y = s * 0.3;
+        ring.rotation.x = s * 0.4; ring.rotation.y = s * 0.3;
         sat.position.set(Math.cos(s * 0.8) * 1.9, Math.sin(s * 0.8) * 1.9, Math.sin(s * 0.5) * 0.4);
         sphere.position.y = Math.sin(s) * 0.25;
-        controls.update();
-        renderer.render(scene, camera);
+        controls.update(); renderer.render(scene, camera);
       })(0);
-    } catch (error) {
-      document.getElementById('fallback').hidden = false;
-      document.getElementById('app').hidden = true;
-      console.error('Orbit scene unavailable', error);
+    }
+
+    if (webglAvailable()) {
+      startGL().catch(() => { console.warn('WebGL failed at runtime, using 2D fallback'); start2D(); });
+    } else {
+      start2D();
     }
   </script>
 </body>
-
 </html>
