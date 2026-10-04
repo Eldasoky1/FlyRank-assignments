@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ahmed El-Dasoky — Backend &amp; AI Engineer</title>
+  <meta name="description"
+    content="Ahmed El-Dasoky — backend systems and AI integrations that remove manual work. CompliAI Backend Lead, FlyRank intern, MCP server builder.">
+  <meta property="og:title" content="Ahmed El-Dasoky — Backend &amp; AI Engineer">
+  <meta property="og:description"
+    content="I build reliable backend systems and AI integrations that remove manual work.">
+  <meta property="og:type" content="website">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%2307f49e'/%3E%3Ctext x='50' y='68' font-size='54' font-family='Arial' font-weight='bold' text-anchor='middle' fill='%2304100c'%3EAE%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --bg: #0a0f14;
+      --bg-2: #0d141c;
+      --panel: rgba(255, 255, 255, 0.03);
+      --line: rgba(255, 255, 255, 0.09);
+      --text: #eaf2ee;
+      --muted: #8fa39b;
+      --accent: #07f49e;
+      --accent-2: #8b5cf6;
+      --radius: 16px;
+      --font: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .bg {
+      position: fixed; inset: 0; z-index: -2; overflow: hidden;
+      background:
+        radial-gradient(900px 460px at 85% -10%, rgba(7, 244, 158, 0.10), transparent 60%),
+        radial-gradient(760px 420px at -8% 88%, rgba(139, 92, 246, 0.10), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+    }
+    .grid-lines {
+      position: absolute; inset: 0; opacity: .5;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 72% 60% at 50% 0%, #000 20%, transparent 75%);
+    }
+
+    main { max-width: 1000px; margin: 0 auto; padding: 24px 22px 72px; }
+
+    /* nav */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 0; margin-bottom: 64px;
+    }
+    .logo {
+      font-family: var(--mono); font-weight: 700; font-size: 15px; letter-spacing: -.02em;
+      color: var(--text); text-decoration: none;
+    }
+    .logo b { color: var(--accent); }
+    .nav-links { display: flex; gap: 22px; font-size: 14px; }
+    .nav-links a { color: var(--muted); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* hero */
+    .hero { max-width: 720px; }
+    .kicker {
+      font-family: var(--mono); font-size: 12.5px; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--accent); display: flex; align-items: center; gap: 10px;
+    }
+    .kicker::before {
+      content: ""; width: 26px; height: 1px; background: var(--accent); opacity: .7;
+    }
+    h1 {
+      margin: 18px 0 14px; font-size: clamp(2rem, 5.2vw, 3.2rem); line-height: 1.08;
+      letter-spacing: -.03em; font-weight: 700;
+    }
+    h1 .accent { color: var(--accent); }
+    .lede { color: var(--muted); font-size: 17px; max-width: 640px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px;
+      border-radius: 999px; font-weight: 600; font-size: 14.5px; text-decoration: none;
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+    }
+    .btn-primary { background: var(--accent); color: #031009; box-shadow: 0 8px 28px -10px rgba(7,244,158,.55); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 36px -10px rgba(7,244,158,.7); }
+    .btn-ghost { border: 1px solid var(--line); background: var(--panel); color: var(--text); }
+    .btn-ghost:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+    /* section headings */
+    section { margin: 76px 0; }
+    .sec-label {
+      font-family: var(--mono); font-size: 12px; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .sec-title { font-size: clamp(1.4rem, 3vw, 1.8rem); letter-spacing: -.02em; margin-bottom: 24px; }
+
+    /* stats */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+    .stat {
+      border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius);
+      padding: 20px;
+    }
+    .stat .num { font-size: 1.8rem; font-weight: 700; letter-spacing: -.02em; color: var(--accent); }
+    .stat .lbl { color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+    /* work grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .card {
+      display: flex; flex-direction: column; gap: 12px;
+      border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius);
+      padding: 22px; text-decoration: none; color: var(--text);
+      transition: transform .2s, border-color .2s;
+      position: relative; overflow: hidden;
+    }
+    .card:hover { transform: translateY(-4px); border-color: rgba(7,244,158,.4); }
+    .card .top { display: flex; align-items: center; justify-content: space-between; }
+    .card .tag {
+      font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--accent); border: 1px solid rgba(7,244,158,.3); padding: 3px 9px; border-radius: 999px;
+    }
+    .card h3 { font-size: 1.12rem; letter-spacing: -.01em; }
+    .card p { color: var(--muted); font-size: 14px; flex: 1; }
+    .card .meta { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+    .card .arrow { color: var(--accent); }
+
+    /* experience */
+    .tl { position: relative; padding-left: 26px; border-left: 1px solid var(--line); }
+    .tl-item { position: relative; margin-bottom: 30px; }
+    .tl-item::before {
+      content: ""; position: absolute; left: -33px; top: 6px; width: 12px; height: 12px;
+      border-radius: 50%; background: var(--bg); border: 2px solid var(--accent);
+    }
+    .tl-item .row { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; justify-content: space-between; }
+    .tl-item h3 { font-size: 1.08rem; }
+    .tl-item .when { color: var(--muted); font-size: 13px; font-family: var(--mono); }
+    .tl-item ul { margin-top: 8px; padding-left: 18px; }
+    .tl-item li { color: var(--muted); font-size: 14.5px; margin: 5px 0; }
+    .tl-item li::marker { color: var(--accent); }
+
+    /* skills marquee */
+    .marquee { overflow: hidden; border: 1px solid var(--line); background: var(--panel); border-radius: var(--radius); padding: 14px 0; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+    .track { display: flex; gap: 10px; width: max-content; animation: scroll 32s linear infinite; }
+    .track:nth-child(2) { animation-direction: reverse; animation-duration: 40s; }
+    @keyframes scroll { to { transform: translateX(-50%); } }
+    .skill {
+      display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-size: 14px;
+      border: 1px solid var(--line); background: rgba(255,255,255,.02); padding: 8px 15px; border-radius: 999px;
+    }
+    .skill::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+    /* footer */
+    footer {
+      margin-top: 72px; padding-top: 22px; border-top: 1px solid var(--line);
+      display: flex; flex-wrap: wrap; gap: 10px 22px; justify-content: space-between;
+      color: var(--muted); font-size: 13.5px;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+    .mono { font-family: var(--mono); }
+
+    .reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s ease, transform .7s cubic-bezier(.22,.7,.3,1); }
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      main { padding: 18px 16px 48px; }
+      section { margin: 56px 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"><div class="grid-lines"></div></div>
+
+  <main>
+    <nav>
+      <a class="logo" href="/">Ahmed<b>.</b>Dasoky</a>
+      <div class="nav-links">
+        <a href="#work">Work</a>
+        <a href="#experience">Experience</a>
+        <a href="/cv.html">CV</a>
+      </div>
+    </nav>
+
+    <header class="hero reveal">
+      <div class="kicker">Backend · AI · MCP</div>
+      <h1>I build backend systems &amp; <span class="accent">AI integrations</span> that remove manual work.</h1>
+      <p class="lede">
+        I'm Ahmed El-Dasoky — AI Architect &amp; Backend Lead at CompliAI, Backend AI Engineering
+        intern at FlyRank, and builder of real, review-passing MCP servers. I turn raw data into
+        something actionable, and prove the work with things that run.
+      </p>
+      <div class="cta">
+        <a class="btn btn-primary" href="/cv.html">View CV</a>
+        <a class="btn btn-ghost" href="https://github.com/Eldasoky1" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/ahmed-eldasoky-b44b4332a" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+    </header>
+
+    <section class="reveal">
+      <div class="stats">
+        <div class="stat"><div class="num">7</div><div class="lbl">engineers led at CompliAI</div></div>
+        <div class="stat"><div class="num">20</div><div class="lbl">tools · LinkedIn MCP server</div></div>
+        <div class="stat"><div class="num">18</div><div class="lbl">tools · Local PC MCP server</div></div>
+        <div class="stat"><div class="num">3rd</div><div class="lbl">place · Green Entrepreneurship</div></div>
+      </div>
+    </section>
+
+    <section id="work" class="reveal">
+      <div class="sec-label">Selected work</div>
+      <h2 class="sec-title">Things I've built</h2>
+      <div class="grid">
+        <a class="card" href="https://github.com/Eldasoky1" target="_blank" rel="noopener">
+          <div class="top"><span class="tag">MCP</span><span class="arrow">↗</span></div>
+          <h3>LinkedIn Automation MCP Server</h3>
+          <p>Profile management, connection automation, messaging, and job search — with smart
+            prioritization and browser-crash recovery. 20 tools.</p>
+          <div class="meta">TypeScript · Playwright · MCP SDK</div>
+        </a>
+        <a class="card" href="https://github.com/Eldasoky1" target="_blank" rel="noopener">
+          <div class="top"><span class="tag">MCP</span><span class="arrow">↗</span></div>
+          <h3>Local PC Control MCP Server</h3>
+          <p>Direct, permission-safe local machine access for AI assistants — file I/O, shell,
+            system monitoring, clipboard. 18 tools.</p>
+          <div class="meta">TypeScript · Node.js · MCP SDK</div>
+        </a>
+        <a class="card" href="https://github.com/Eldasoky1/FlyRank-assignments" target="_blank" rel="noopener">
+          <div class="top"><span class="tag">Internship</span><span class="arrow">↗</span></div>
+          <h3>FlyRank assignments &amp; capstones</h3>
+          <p>Backend AI, frontend, UX, and AI-Fluency tracks — tested, deployed, and reviewed.
+            A social-studio scheduler, streaming chat, and more.</p>
+          <div class="meta">Python · FastAPI · React · Cloudflare</div>
+        </a>
+        <a class="card" href="https://github.com/Eldasoky1" target="_blank" rel="noopener">
+          <div class="top"><span class="tag">AI</span><span class="arrow">↗</span></div>
+          <h3>ECo — crop-disease detection</h3>
+          <p>AI-powered plant disease detection system, built and shipped with a four-person team.
+            3rd place — Green Entrepreneurship Competition.</p>
+          <div class="meta">Computer Vision · PyTorch</div>
+        </a>
+      </div>
+    </section>
+
+    <section id="experience" class="reveal">
+      <div class="sec-label">Experience</div>
+      <h2 class="sec-title">Where I've worked</h2>
+      <div class="tl">
+        <div class="tl-item">
+          <div class="row"><h3>AI Architect / Backend Lead — CompliAI</h3><span class="when">Mar 2024 – Present</span></div>
+          <ul>
+            <li>Full-stack B2B SaaS infrastructure for EU AI Act compliance automation.</li>
+            <li>React + PostgreSQL + GPT-4o inference pipeline connecting frontend to AI backend.</li>
+            <li>Led 7 engineers across frontend, backend, and AI/ML — sprints and code reviews.</li>
+            <li>Agentic AI systems for automated compliance document processing.</li>
+          </ul>
+        </div>
+        <div class="tl-item">
+          <div class="row"><h3>Backend AI Engineering Intern — FlyRank</h3><span class="when">Jul 2026 – Oct 2026</span></div>
+          <ul>
+            <li>Automation layer for organic and AI-search visibility during an 8-week internship.</li>
+            <li>Built personal agents, MCP-backed workflows, and this very site.</li>
+          </ul>
+        </div>
+        <div class="tl-item">
+          <div class="row"><h3>Backend Developer — AI-Powered CRM &amp; Lead Enrichment</h3><span class="when">Jan 2025 – Jul 2025</span></div>
+          <ul>
+            <li>Web-scraping microservice (Node.js + Puppeteer) extracting metadata at scale.</li>
+            <li>GPT-4o parsing of unstructured scraped data into structured JSON.</li>
+            <li>Multi-tenant Supabase/PostgreSQL schema with Row-level security.</li>
+            <li>Express REST API with strict error handling and Jest coverage.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <div class="sec-label">Toolbox</div>
+      <h2 class="sec-title">Skills</h2>
+      <div class="marquee">
+        <div class="track" id="skills"></div>
+      </div>
+    </section>
+
+    <footer>
+      <span>© <span id="yr"></span> Ahmed El-Dasoky. Built by hand · Cloudflare Pages.</span>
+      <span class="mono"><a href="mailto:ahmed.eldasouky01@gmail.com">Email</a> · <a href="tel:+201221875193">Phone</a> · <a href="https://github.com/Eldasoky1" target="_blank" rel="noopener">GitHub</a></span>
+    </footer>
+  </main>
+
+  <script>
+    document.getElementById('yr').textContent = new Date().getFullYear();
+    const skills = ['Python', 'TypeScript', 'JavaScript', 'Node.js (Express)', 'FastAPI', 'REST API Design', 'PostgreSQL', 'Supabase', 'SQLAlchemy', 'PyTorch', 'Computer Vision', 'RAG Pipelines', 'GPT-4o / LLM Integration', 'MCP (Model Context Protocol)', 'AI Agent Tooling', 'Playwright', 'Puppeteer', 'React', 'Vue.js', 'Git', 'Docker', 'CI/CD', 'Cloudflare', 'CLI Tooling'];
+    const el = document.getElementById('skills');
+    el.innerHTML = skills.map(s => `<span class="skill">${s}</span>`).join('') + el.innerHTML;
+    el.innerHTML += el.innerHTML;
+    el.innerHTML += el.innerHTML;
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(r => io.observe(r));
+  </script>
+</body>
+</html>
